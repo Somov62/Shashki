@@ -52,10 +52,17 @@ namespace Shashki
             new Shashka(5, 6, Team.Black),
         };
         private bool partStep;
-
+        private Shashka SelectedShahka;
         public MainWindow()
         {
             InitializeComponent();
+            
+            Output();
+        }
+
+        private void Output()
+        {
+            playGround.Children.Clear();
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -63,7 +70,7 @@ namespace Shashki
                     if ((i + j) % 2 == 1)
                     {
                         Border br = new Border() { Background = Brushes.Black };
-                        Button btn =   new Button() { BorderThickness = new Thickness(0), Background = Brushes.Transparent};
+                        Button btn = new Button() { BorderThickness = new Thickness(0), Background = Brushes.Transparent, DataContext = br };
                         btn.Click += Button_Click;
                         br.Child = btn;
                         playGround.Children.Add(br);
@@ -85,24 +92,67 @@ namespace Shashki
                 Grid.SetColumn(item.Figure, item.ColumnCoord);
             }
         }
+
         public void Button_Click(object sender, RoutedEventArgs e)
         {
             if (!partStep)
             {
                 Button btn = (Button)sender;
-                int row = Grid.GetRow(btn);
-                int column = Grid.GetColumn(btn);
+                Border br = (Border)btn.DataContext;
+                int row = Grid.GetRow(br);
+                int column = Grid.GetColumn(br);
                 var shashk = _whiteShashks.Where(shahck => shahck.RowCoord == row)
                                           .Where(shahck => shahck.ColumnCoord == column);
-
+                List<Shashka> list = shashk.ToList();
+                if (list.Count != 0)
+                {
+                    SelectedShahka = list[0];
+                    SelectedShahka.IsSelected = true;
+                }
+                else
+                {
+                    shashk = _blackShashks.Where(shahck => shahck.RowCoord == row)
+                                         .Where(shahck => shahck.ColumnCoord == column);
+                    list = shashk.ToList();
+                    if (list.Count != 0)
+                    {
+                        SelectedShahka = list[0];
+                        SelectedShahka.IsSelected = true;
+                    }
+                }
                 partStep = true;
                 return;
             }
-            Step();
+            Step(sender);
+            partStep = false;
         }
-        private void Step()
+        private void Step(object sender)
         {
+            (int row, int column) = GetCoord(sender);
+            if (SelectedShahka.Color == Team.Black)
+            {
+                if (SelectedShahka.RowCoord - row == 1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
+                {
+                    int count = _blackShashks.Where(shahck => shahck.RowCoord == row)
+                                         .Where(shahck => shahck.ColumnCoord == column).Count();
+                    if (count == 0)
+                    {
+                        SelectedShahka.RowCoord = row;
+                        SelectedShahka.ColumnCoord = column;
+                        Output();
+                    }
+                    
+                }
 
+            }
+        }
+        private (int row, int column) GetCoord(object sender)
+        {
+            Button btn = (Button)sender;
+            Border br = (Border)btn.DataContext;
+            int row = Grid.GetRow(br);
+            int column = Grid.GetColumn(br);
+            return (row, column);
         }
     }
 }

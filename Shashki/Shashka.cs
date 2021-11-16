@@ -23,6 +23,7 @@ namespace Shashki
         public int ColumnCoord { get; set; }
         public Team Color { get; set; }
         public bool IsSelected { get; set; }
+        public bool IsDamka { get; set; }
         public Border Figure { get => _figure; }
     }
     public enum Team
