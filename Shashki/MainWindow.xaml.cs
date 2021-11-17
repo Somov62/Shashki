@@ -95,9 +95,10 @@ namespace Shashki
 
         public void Button_Click(object sender, RoutedEventArgs e)
         {
+            (int row, int column) = GetCoord(sender);
+            if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks) && !partStep) return; 
             if (!partStep)
             {
-                (int row, int column) = GetCoord(sender);
                 if (FindShashka(row, column, _whiteShashks, true)) {}
                 else FindShashka(row, column, _blackShashks, true);
                 partStep = true;
@@ -123,13 +124,17 @@ namespace Shashki
             }
             return false;
         }
-        //private Shashka FindShashka1(int row, int column, List<Shashka> collection)
-        //{
-        //    var shashk = collection.Where(shahck => shahck.RowCoord == row)
-        //                           .Where(shahck => shahck.ColumnCoord == column);
-        //    List<Shashka> list = shashk.ToList();
-
-        //}
+        private void RemoveShashka(int row, int column, List<Shashka> collection)
+        {
+            var shashk = collection.Where(shahck => shahck.RowCoord == row)
+                                   .Where(shahck => shahck.ColumnCoord == column);
+            List<Shashka> list = shashk.ToList();
+            if (list.Count > 0)
+            {
+                Shashka rs = list[0];
+                collection.Remove(rs);
+            }
+        }
         private void Step(object sender)
         {
             (int row, int column) = GetCoord(sender);
@@ -143,6 +148,7 @@ namespace Shashki
                         SelectedShahka.ColumnCoord = column;
                         Output();
                         partStep = false;
+                        SelectedShahka.IsSelected = false;
                         return;
                     }
                 }
@@ -157,6 +163,7 @@ namespace Shashki
                         SelectedShahka.ColumnCoord = column;
                         Output();
                         partStep = false;
+                        SelectedShahka.IsSelected = false;
                         return;
                     }
                 }
@@ -172,10 +179,15 @@ namespace Shashki
                 {
                     if (FindShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList))
                     {
+                        RemoveShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList);
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         Output();
-                        if (!CheckEat(SelectedShahka)) partStep = false;
+                        if (!CheckEat(SelectedShahka))
+                        {
+                            partStep = false;
+                            SelectedShahka.IsSelected = false;
+                        }
                         return;
                     }
                 }
@@ -183,10 +195,15 @@ namespace Shashki
                 {
                     if (FindShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord + 1, enemyList))
                     {
+                        RemoveShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord + 1, enemyList);
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         Output();
-                        if (!CheckEat(SelectedShahka)) partStep = false;
+                        if (!CheckEat(SelectedShahka))
+                        {
+                            partStep = false;
+                            SelectedShahka.IsSelected = false;
+                        }
                         return;
                     }
                 }
@@ -194,10 +211,15 @@ namespace Shashki
                 {
                     if (FindShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord - 1, enemyList))
                     {
+                        RemoveShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord - 1, enemyList);
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         Output();
-                        if (!CheckEat(SelectedShahka)) partStep = false;
+                        if (!CheckEat(SelectedShahka))
+                        {
+                            partStep = false;
+                            SelectedShahka.IsSelected = false;
+                        }
                         return;
                     }
                 }
@@ -205,10 +227,15 @@ namespace Shashki
                 {
                     if (FindShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord + 1, enemyList))
                     {
+                        RemoveShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord + 1, enemyList);
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         Output();
-                        if(!CheckEat(SelectedShahka)) partStep = false;
+                        if (!CheckEat(SelectedShahka))
+                        {
+                            partStep = false;
+                            SelectedShahka.IsSelected = false;
+                        }
                         return;
                     }
                 }
@@ -230,23 +257,31 @@ namespace Shashki
             if (shashka.Color == Team.White) enemyList = _blackShashks;
             if (FindShashka(shashka.RowCoord - 1, shashka.ColumnCoord - 1, enemyList))
             {
-                if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord - 2, _blackShashks)) return true;
-                if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord - 2, _whiteShashks)) return true;
+                if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord - 2, _blackShashks))
+                {
+                    if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord - 2, _whiteShashks)) return true;
+                }
             }
             if (FindShashka(shashka.RowCoord - 1, shashka.ColumnCoord + 1, enemyList))
             {
-                if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord + 2, _blackShashks)) return true;
-                if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord + 2, _whiteShashks)) return true;
+                if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord + 2, _blackShashks))
+                {
+                    if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord + 2, _whiteShashks)) return true;
+                }
             }
             if (FindShashka(shashka.RowCoord + 1, shashka.ColumnCoord - 1, enemyList))
             {
-                if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord - 2, _blackShashks)) return true;
-                if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord - 2, _whiteShashks)) return true;
+                if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord - 2, _blackShashks))
+                {
+                    if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord - 2, _whiteShashks)) return true;
+                }
             }
             if (FindShashka(shashka.RowCoord + 1, shashka.ColumnCoord + 1, enemyList))
             {
-                if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord + 2, _blackShashks)) return true;
-                if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord + 2, _whiteShashks)) return true;
+                if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord + 2, _blackShashks))
+                {
+                    if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord + 2, _whiteShashks)) return true;
+                }
             }
             return false;
         }
