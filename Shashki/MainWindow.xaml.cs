@@ -104,7 +104,7 @@ namespace Shashki
                 return;
             }
             Step(sender);
-            partStep = false;
+            
         }
 
         private bool FindShashka(int row, int column, List<Shashka> collection, bool isSelect = false)
@@ -136,6 +136,8 @@ namespace Shashki
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         Output();
+                        partStep = false;
+                        return;
                     }
                 }
             }
@@ -148,12 +150,55 @@ namespace Shashki
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         Output();
+                        partStep = false;
+                        return;
                     }
                 }
             }
-            if (Math.Abs(SelectedShahka.ColumnCoord - row) == 2 && Math.Abs(SelectedShahka.ColumnCoord - column) == 2)
+            if (Math.Abs(SelectedShahka.RowCoord - row) == 2 && Math.Abs(SelectedShahka.ColumnCoord - column) == 2)
             {
-
+                if (FindShashka(row, column, _blackShashks)) return;
+                if (FindShashka(row, column, _whiteShashks)) return;
+                List<Shashka> enemyList = new List<Shashka>();
+                if (SelectedShahka.Color == Team.Black) enemyList = _whiteShashks;
+                else enemyList = _blackShashks;
+                if (SelectedShahka.RowCoord > row && SelectedShahka.ColumnCoord > column)
+                {
+                    if (FindShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList))
+                    {
+                        SelectedShahka.RowCoord = row;
+                        SelectedShahka.ColumnCoord = column;
+                        Output();
+                    }
+                }
+                if (SelectedShahka.RowCoord < row && SelectedShahka.ColumnCoord < column)
+                {
+                    if (FindShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord + 1, enemyList))
+                    {
+                        SelectedShahka.RowCoord = row;
+                        SelectedShahka.ColumnCoord = column;
+                        Output();
+                    }
+                }
+                if (SelectedShahka.RowCoord < row && SelectedShahka.ColumnCoord > column)
+                {
+                    if (FindShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord - 1, enemyList))
+                    {
+                        SelectedShahka.RowCoord = row;
+                        SelectedShahka.ColumnCoord = column;
+                        Output();
+                    }
+                }
+                if (SelectedShahka.RowCoord > row && SelectedShahka.ColumnCoord < column)
+                {
+                    if (FindShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord + 1, enemyList))
+                    {
+                        SelectedShahka.RowCoord = row;
+                        SelectedShahka.ColumnCoord = column;
+                        Output();
+                    }
+                }
+                
             }
         }
         private (int row, int column) GetCoord(object sender)
