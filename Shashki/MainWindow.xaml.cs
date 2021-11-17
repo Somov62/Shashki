@@ -123,7 +123,13 @@ namespace Shashki
             }
             return false;
         }
+        //private Shashka FindShashka1(int row, int column, List<Shashka> collection)
+        //{
+        //    var shashk = collection.Where(shahck => shahck.RowCoord == row)
+        //                           .Where(shahck => shahck.ColumnCoord == column);
+        //    List<Shashka> list = shashk.ToList();
 
+        //}
         private void Step(object sender)
         {
             (int row, int column) = GetCoord(sender);
@@ -169,6 +175,8 @@ namespace Shashki
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         Output();
+                        if (!CheckEat(SelectedShahka)) partStep = false;
+                        return;
                     }
                 }
                 if (SelectedShahka.RowCoord < row && SelectedShahka.ColumnCoord < column)
@@ -178,6 +186,8 @@ namespace Shashki
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         Output();
+                        if (!CheckEat(SelectedShahka)) partStep = false;
+                        return;
                     }
                 }
                 if (SelectedShahka.RowCoord < row && SelectedShahka.ColumnCoord > column)
@@ -187,6 +197,8 @@ namespace Shashki
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         Output();
+                        if (!CheckEat(SelectedShahka)) partStep = false;
+                        return;
                     }
                 }
                 if (SelectedShahka.RowCoord > row && SelectedShahka.ColumnCoord < column)
@@ -196,6 +208,8 @@ namespace Shashki
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         Output();
+                        if(!CheckEat(SelectedShahka)) partStep = false;
+                        return;
                     }
                 }
                 
