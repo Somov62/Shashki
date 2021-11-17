@@ -138,10 +138,22 @@ namespace Shashki
                         Output();
                     }
                 }
-                if (Math.Abs(SelectedShahka.ColumnCoord - row) == 2 && Math.Abs(SelectedShahka.ColumnCoord - column) == 2)
+            }
+            if (SelectedShahka.Color == Team.White)
+            {
+                if (SelectedShahka.RowCoord - row == -1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
                 {
-
+                    if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                    {
+                        SelectedShahka.RowCoord = row;
+                        SelectedShahka.ColumnCoord = column;
+                        Output();
+                    }
                 }
+            }
+            if (Math.Abs(SelectedShahka.ColumnCoord - row) == 2 && Math.Abs(SelectedShahka.ColumnCoord - column) == 2)
+            {
+
             }
         }
         private (int row, int column) GetCoord(object sender)
