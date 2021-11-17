@@ -56,7 +56,6 @@ namespace Shashki
         public MainWindow()
         {
             InitializeComponent();
-            
             Output();
         }
 
@@ -128,8 +127,10 @@ namespace Shashki
             (int row, int column) = GetCoord(sender);
             if (SelectedShahka.Color == Team.Black)
             {
+                MessageBox.Show((SelectedShahka.RowCoord - row).ToString() + Math.Abs(SelectedShahka.ColumnCoord - column).ToString());
                 if (SelectedShahka.RowCoord - row == 1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
                 {
+                   
                     int count = _blackShashks.Where(shahck => shahck.RowCoord == row)
                                          .Where(shahck => shahck.ColumnCoord == column).Count();
                     if (count == 0)
