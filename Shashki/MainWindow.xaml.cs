@@ -97,10 +97,7 @@ namespace Shashki
         {
             if (!partStep)
             {
-                Button btn = (Button)sender;
-                Border br = (Border)btn.DataContext;
-                int row = Grid.GetRow(br);
-                int column = Grid.GetColumn(br);
+                (int row, int column) = GetCoord(sender);
                 var shashk = _whiteShashks.Where(shahck => shahck.RowCoord == row)
                                           .Where(shahck => shahck.ColumnCoord == column);
                 List<Shashka> list = shashk.ToList();
