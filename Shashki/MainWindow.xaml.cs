@@ -52,11 +52,11 @@ namespace Shashki
             new Shashka(5, 6, Team.Black),
         };
         private bool partStep;
+        private bool IsWhiteGo;
         private Shashka SelectedShahka;
         public MainWindow()
         {
             InitializeComponent();
-            
             Output();
         }
 
