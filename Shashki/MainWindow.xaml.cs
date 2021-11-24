@@ -135,7 +135,7 @@ namespace Shashki
                 collection.Remove(rs);
             }
         }
-        private void Step(object sender)
+        private bool Step(object sender)
         {
             (int row, int column) = GetCoord(sender);
             if (SelectedShahka.Color == Team.Black)
@@ -149,7 +149,7 @@ namespace Shashki
                         Output();
                         partStep = false;
                         SelectedShahka.IsSelected = false;
-                        return;
+                        return true;
                     }
                 }
             }
@@ -164,14 +164,14 @@ namespace Shashki
                         Output();
                         partStep = false;
                         SelectedShahka.IsSelected = false;
-                        return;
+                        return true;
                     }
                 }
             }
             if (Math.Abs(SelectedShahka.RowCoord - row) == 2 && Math.Abs(SelectedShahka.ColumnCoord - column) == 2)
             {
-                if (FindShashka(row, column, _blackShashks)) return;
-                if (FindShashka(row, column, _whiteShashks)) return;
+                if (FindShashka(row, column, _blackShashks)) return false;
+                if (FindShashka(row, column, _whiteShashks)) return false;
                 List<Shashka> enemyList = new List<Shashka>();
                 if (SelectedShahka.Color == Team.Black) enemyList = _whiteShashks;
                 else enemyList = _blackShashks;
@@ -188,7 +188,7 @@ namespace Shashki
                             partStep = false;
                             SelectedShahka.IsSelected = false;
                         }
-                        return;
+                        return true;
                     }
                 }
                 if (SelectedShahka.RowCoord < row && SelectedShahka.ColumnCoord < column)
@@ -204,7 +204,7 @@ namespace Shashki
                             partStep = false;
                             SelectedShahka.IsSelected = false;
                         }
-                        return;
+                        return true;
                     }
                 }
                 if (SelectedShahka.RowCoord < row && SelectedShahka.ColumnCoord > column)
@@ -220,7 +220,7 @@ namespace Shashki
                             partStep = false;
                             SelectedShahka.IsSelected = false;
                         }
-                        return;
+                        return true;
                     }
                 }
                 if (SelectedShahka.RowCoord > row && SelectedShahka.ColumnCoord < column)
@@ -236,11 +236,11 @@ namespace Shashki
                             partStep = false;
                             SelectedShahka.IsSelected = false;
                         }
-                        return;
+                        return true;
                     }
                 }
-                
             }
+            return false;
         }
         private (int row, int column) GetCoord(object sender)
         {
