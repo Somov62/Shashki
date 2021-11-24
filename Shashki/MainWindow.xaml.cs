@@ -51,7 +51,7 @@ namespace Shashki
             new Shashka(5, 4, Team.Black),
             new Shashka(5, 6, Team.Black),
         };
-        private bool partStep =false;
+        private bool partStep = false;
         private bool IsWhiteGo = true;
         private Shashka SelectedShahka;
         public MainWindow()
@@ -96,8 +96,8 @@ namespace Shashki
         public void Button_Click(object sender, RoutedEventArgs e)
         {
             (int row, int column) = GetCoord(sender);
-            if(!partStep && (FindShashka(row, column, _blackShashks) || FindShashka(row, column, _whiteShashks)))
-            { 
+            if (!partStep && (FindShashka(row, column, _blackShashks) || FindShashka(row, column, _whiteShashks)))
+            {
                 if (IsWhiteGo)
                 {
                     FindShashka(row, column, _whiteShashks, true);
@@ -109,20 +109,20 @@ namespace Shashki
                     return;
                 }
             }
-            if(SelectedShahka.IsSelected==true)
-            if (Step(sender))
-            {
-                Output();
-                if (CheckEat(SelectedShahka))
+            if (SelectedShahka.IsSelected == true)
+                if (Step(sender))
                 {
-                    partStep = true;
-                    return;
+                    Output();
+                    if (CheckEat(SelectedShahka))
+                    {
+                        partStep = true;
+                        return;
+                    }
+                    SelectedShahka.IsSelected = false;
+                    IsWhiteGo = !IsWhiteGo;
+                    partStep = false;
                 }
-                SelectedShahka.IsSelected = false;
-                IsWhiteGo = !IsWhiteGo;
-                partStep = false;
-            }
-            
+
         }
 
         private bool FindShashka(int row, int column, List<Shashka> collection, bool isSelect = false)
@@ -134,7 +134,7 @@ namespace Shashki
             {
                 if (isSelect)
                 {
-                    if(SelectedShahka!=null)
+                    if (SelectedShahka != null)
                         SelectedShahka.IsSelected = false;
                     SelectedShahka = list[0];
                     SelectedShahka.IsSelected = true;
@@ -157,27 +157,30 @@ namespace Shashki
         private bool Step(object sender)
         {
             (int row, int column) = GetCoord(sender);
-            if (SelectedShahka.Color == Team.Black)
+            if (!partStep)
             {
-                if (SelectedShahka.RowCoord - row == 1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
+                if (SelectedShahka.Color == Team.Black)
                 {
-                    if(!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                    if (SelectedShahka.RowCoord - row == 1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
                     {
-                        SelectedShahka.RowCoord = row;
-                        SelectedShahka.ColumnCoord = column;
-                        return true;
+                        if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                        {
+                            SelectedShahka.RowCoord = row;
+                            SelectedShahka.ColumnCoord = column;
+                            return true;
+                        }
                     }
                 }
-            }
-            if (SelectedShahka.Color == Team.White)
-            {
-                if (SelectedShahka.RowCoord - row == -1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
+                if (SelectedShahka.Color == Team.White)
                 {
-                    if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                    if (SelectedShahka.RowCoord - row == -1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
                     {
-                        SelectedShahka.RowCoord = row;
-                        SelectedShahka.ColumnCoord = column;
-                        return true;
+                        if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                        {
+                            SelectedShahka.RowCoord = row;
+                            SelectedShahka.ColumnCoord = column;
+                            return true;
+                        }
                     }
                 }
             }
@@ -274,6 +277,6 @@ namespace Shashki
             }
             return false;
         }
-        
+
     }
 }
