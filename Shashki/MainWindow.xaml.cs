@@ -96,15 +96,36 @@ namespace Shashki
         public void Button_Click(object sender, RoutedEventArgs e)
         {
             (int row, int column) = GetCoord(sender);
-            if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks) && !partStep) return; 
-            if (!partStep)
+            if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks) && !partStep) return;
+            if (IsWhiteGo)
             {
-                if (FindShashka(row, column, _whiteShashks, true)) {}
-                else FindShashka(row, column, _blackShashks, true);
-                partStep = true;
-                return;
+                FindShashka(row, column, _whiteShashks, true);
+            partStep = true;
+            return;
             }
-            Step(sender);
+            else
+            {
+                FindShashka(row, column, _blackShashks, true);
+            partStep = true;
+            return;
+            }
+            //if (!partStep)
+            //{
+            //    if (FindShashka(row, column, _whiteShashks, true)) {}
+            //    else FindShashka(row, column, _blackShashks, true);
+            //}
+            if (Step(sender))
+            {
+                Output();
+                if (!CheckEat(SelectedShahka))
+                {
+                    IsWhiteGo = !IsWhiteGo;
+                    partStep = true;
+                    return;
+                }
+                SelectedShahka.IsSelected = false;
+                partStep = false;
+            }
             
         }
 
@@ -117,6 +138,8 @@ namespace Shashki
             {
                 if (isSelect)
                 {
+                    if(SelectedShahka!=null)
+                        SelectedShahka.IsSelected = false;
                     SelectedShahka = list[0];
                     SelectedShahka.IsSelected = true;
                 }
@@ -146,8 +169,6 @@ namespace Shashki
                     {
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
-                        Output();
-                        partStep = false;
                         SelectedShahka.IsSelected = false;
                         return true;
                     }
@@ -161,8 +182,6 @@ namespace Shashki
                     {
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
-                        Output();
-                        partStep = false;
                         SelectedShahka.IsSelected = false;
                         return true;
                     }
@@ -182,12 +201,6 @@ namespace Shashki
                         RemoveShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList);
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
-                        Output();
-                        if (!CheckEat(SelectedShahka))
-                        {
-                            partStep = false;
-                            SelectedShahka.IsSelected = false;
-                        }
                         return true;
                     }
                 }
@@ -198,12 +211,6 @@ namespace Shashki
                         RemoveShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord + 1, enemyList);
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
-                        Output();
-                        if (!CheckEat(SelectedShahka))
-                        {
-                            partStep = false;
-                            SelectedShahka.IsSelected = false;
-                        }
                         return true;
                     }
                 }
@@ -214,12 +221,6 @@ namespace Shashki
                         RemoveShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord - 1, enemyList);
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
-                        Output();
-                        if (!CheckEat(SelectedShahka))
-                        {
-                            partStep = false;
-                            SelectedShahka.IsSelected = false;
-                        }
                         return true;
                     }
                 }
@@ -230,12 +231,6 @@ namespace Shashki
                         RemoveShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord + 1, enemyList);
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
-                        Output();
-                        if (!CheckEat(SelectedShahka))
-                        {
-                            partStep = false;
-                            SelectedShahka.IsSelected = false;
-                        }
                         return true;
                     }
                 }
