@@ -18,7 +18,7 @@ namespace Shashki
             Color = team;
             RowCoord = rowCoord;
             ColumnCoord = columnCoord;
-            _figure = new Border() { Margin = new Thickness(20), CornerRadius = new CornerRadius(20), Background = team == Team.Black ? Brushes.Gray : Brushes.White, IsHitTestVisible = false,  BorderBrush = Brushes.Black, BorderThickness =new Thickness(2) };
+            _figure = new Border() { Margin = new Thickness(20), CornerRadius = new CornerRadius(30), Background = team == Team.Black ? Brushes.DarkGray : Brushes.White, IsHitTestVisible = false,  BorderBrush = Brushes.Transparent, BorderThickness =new Thickness(3) };
         }
         public int RowCoord { get; set; }
         public int ColumnCoord { get; set; }
@@ -33,7 +33,7 @@ namespace Shashki
             { 
                 _isSelected = value;
                 if (value) _figure.BorderBrush = Brushes.Gold;
-                else _figure.BorderBrush = Brushes.Gray;
+                else _figure.BorderBrush = Brushes.Transparent;
             }
         }
         public bool IsDamka { get; set; }

@@ -23,33 +23,33 @@ namespace Shashki
     {
         private List<Shashka> _whiteShashks = new List<Shashka>()
         {
-            new Shashka(0, 1, Team.White),
-            new Shashka(0, 3, Team.White),
-            new Shashka(0, 5, Team.White),
-            new Shashka(0, 7, Team.White),
-            new Shashka(1, 0, Team.White),
-            new Shashka(1, 2, Team.White),
-            new Shashka(1, 4, Team.White),
-            new Shashka(1, 6, Team.White),
-            new Shashka(2, 1, Team.White),
-            new Shashka(2, 3, Team.White),
-            new Shashka(2, 5, Team.White),
-            new Shashka(2, 7, Team.White),
+            new Shashka(0 + 1, 1 + 1, Team.White),
+            new Shashka(0 + 1, 3 + 1, Team.White),
+            new Shashka(0 + 1, 5 + 1, Team.White),
+            new Shashka(0 + 1, 7 + 1, Team.White),
+            new Shashka(1 + 1, 0 + 1, Team.White),
+            new Shashka(1 + 1, 2 + 1, Team.White),
+            new Shashka(1 + 1, 4 + 1, Team.White),
+            new Shashka(1 + 1, 6 + 1, Team.White),
+            new Shashka(2 + 1, 1 + 1, Team.White),
+            new Shashka(2 + 1, 3 + 1, Team.White),
+            new Shashka(2 + 1, 5 + 1, Team.White),
+            new Shashka(2 + 1, 7 + 1, Team.White),
         };
         private List<Shashka> _blackShashks = new List<Shashka>()
         {
-            new Shashka(6, 1, Team.Black),
-            new Shashka(6, 3, Team.Black),
-            new Shashka(6, 5, Team.Black),
-            new Shashka(6, 7, Team.Black),
-            new Shashka(7, 0, Team.Black),
-            new Shashka(7, 2, Team.Black),
-            new Shashka(7, 4, Team.Black),
-            new Shashka(7, 6, Team.Black),
-            new Shashka(5, 0, Team.Black),
-            new Shashka(5, 2, Team.Black),
-            new Shashka(5, 4, Team.Black),
-            new Shashka(5, 6, Team.Black),
+            new Shashka(6 + 1, 1 + 1, Team.Black),
+            new Shashka(6 + 1, 3 + 1, Team.Black),
+            new Shashka(6 + 1, 5 + 1, Team.Black),
+            new Shashka(6 + 1, 7 + 1, Team.Black),
+            new Shashka(7 + 1, 0 + 1, Team.Black),
+            new Shashka(7 + 1, 2 + 1, Team.Black),
+            new Shashka(7 + 1, 4 + 1, Team.Black),
+            new Shashka(7 + 1, 6 + 1, Team.Black),
+            new Shashka(5 + 1, 0 + 1, Team.Black),
+            new Shashka(5 + 1, 2 + 1, Team.Black),
+            new Shashka(5 + 1, 4 + 1, Team.Black),
+            new Shashka(5 + 1, 6 + 1, Team.Black),
         };
         private List<Shashka> _fookShashks = new List<Shashka>();
         private bool _eatEvent = false;
@@ -64,16 +64,23 @@ namespace Shashki
         private void Output()
         {
             playGround.Children.Clear();
-            for (int i = 0; i < 8; i++)
+            for (int i = 1; i < 9; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 1; j < 9; j++)
                 {
                     if ((i + j) % 2 == 1)
                     {
-                        Border br = new Border() { Background = Brushes.Black };
+                        Border br = new Border() { Background = Brushes.DodgerBlue };
                         Button btn = new Button() { BorderThickness = new Thickness(0), Background = Brushes.Transparent, DataContext = br };
                         btn.Click += Button_Click;
                         br.Child = btn;
+                        playGround.Children.Add(br);
+                        Grid.SetRow(br, i);
+                        Grid.SetColumn(br, j);
+                    }
+                    else
+                    {
+                        Border br = new Border() { Background = Brushes.Wheat };
                         playGround.Children.Add(br);
                         Grid.SetRow(br, i);
                         Grid.SetColumn(br, j);
@@ -141,7 +148,7 @@ namespace Shashki
 
         private bool FindShashka(int row, int column, List<Shashka> collection, bool isSelect = false)
         {
-            if (row < 0 || row > 7 || column < 0 || column > 7) return true;
+            if (row < 1 || row > 8 || column < 1 || column > 8) return true;
             var shashk = collection.Where(shahck => shahck.RowCoord == row)
                                    .Where(shahck => shahck.ColumnCoord == column);
             List<Shashka> list = shashk.ToList();

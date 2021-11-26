@@ -5,9 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Shashki"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="600">
+        Title="MainWindow" Height="1000" Width="1400" ResizeMode="CanMinimize">
+    <Window.Background>
+        <RadialGradientBrush>
+            <GradientStop Color="Black" Offset="0.329"/>
+            <GradientStop Color="Black" Offset="0.886"/>
+            <GradientStop Color="White" Offset="0.518"/>
+        </RadialGradientBrush>
+    </Window.Background>
+
     <Grid x:Name="playGround">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -16,6 +25,8 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="400"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -26,7 +37,9 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        
+
     </Grid>
 </Window>
