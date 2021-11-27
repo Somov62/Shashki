@@ -29,7 +29,7 @@ namespace Shashki
         #region FindShashka
         private bool FindShashka(int row, int column, List<Shashka> collection, bool isSelect = false)
         {
-            if (row < 1 || row > 8 || column < 1 || column > 8) return true;
+            if (row < 0 || row > 7 || column < 0 || column > 7) return true;
             var shashk = collection.Where(shahck => shahck.RowCoord == row)
                                    .Where(shahck => shahck.ColumnCoord == column);
             List<Shashka> list = shashk.ToList();
@@ -88,7 +88,7 @@ namespace Shashki
 
         private Shashka GetShashka(int row, int column, List<Shashka> collection)
         {
-            if (row < 1 || row > 8 || column < 1 || column > 8) return null;
+            if (row < 0 || row > 7 || column < 0 || column > 7) return null;
             var shashk = collection.Where(shahck => shahck.RowCoord == row)
                                    .Where(shahck => shahck.ColumnCoord == column);
             List<Shashka> list = shashk.ToList();
