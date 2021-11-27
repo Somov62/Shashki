@@ -21,6 +21,7 @@ namespace Shashki
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Fields
         private List<Shashka> _whiteShashks = new List<Shashka>()
         {
             new Shashka(0 + 1, 1 + 1, Team.White),
@@ -52,9 +53,13 @@ namespace Shashki
             new Shashka(5 + 1, 6 + 1, Team.Black),
         };
         private List<Shashka> _fookShashks = new List<Shashka>();
+
         private bool _eatEvent = false;
         private bool IsWhiteGo = true;
+        private bool _fook = false;
+
         private Shashka SelectedShahka;
+        #endregion
         public MainWindow()
         {
             InitializeComponent();
@@ -108,34 +113,29 @@ namespace Shashki
             {
                 if (IsWhiteGo)
                 {
+                    if (TakeFook(row, column)) return; 
                     FindShashka(row, column, _whiteShashks, true);
                     return;
                 }
                 else
                 {
+                    if (TakeFook(row, column)) return;
                     FindShashka(row, column, _blackShashks, true);
                     return;
                 }
             }
             if (SelectedShahka.IsSelected == true)
             {
-                CheckFook();
+                _fook = CheckFook();
                 if (Step(sender))
                 {
                     if (_eatEvent)
                     {
+                        _fook = false;
                         if (CheckEat(SelectedShahka))
                         {
                             Output();
                             return;
-                        }
-                    }
-                    else
-                    {
-                        if (_fookShashks.Count > 0)
-                        {
-                            var removeItem = _fookShashks[0];
-                            RemoveShashka(removeItem.RowCoord, removeItem.ColumnCoord, removeItem.Color);
                         }
                     }
                     Output();
@@ -146,60 +146,6 @@ namespace Shashki
             }
         }
 
-        private bool FindShashka(int row, int column, List<Shashka> collection, bool isSelect = false)
-        {
-            if (row < 1 || row > 8 || column < 1 || column > 8) return true;
-            var shashk = collection.Where(shahck => shahck.RowCoord == row)
-                                   .Where(shahck => shahck.ColumnCoord == column);
-            List<Shashka> list = shashk.ToList();
-            if (list.Count != 0)
-            {
-                if (isSelect)
-                {
-                    if (SelectedShahka != null)
-                    {
-                        SelectedShahka.IsSelected = false;
-                    }
-                    SelectedShahka = list[0];
-                    SelectedShahka.IsSelected = true;
-                }
-                return true;
-            }
-            return false;
-        }
-        private bool FindShashka(int row, int column, Team color, bool isSelect = false)
-        {
-            if (color == Team.Black)
-            {
-                return FindShashka(row, column, _blackShashks, isSelect);
-            }
-            else
-            {
-                return FindShashka(row, column, _whiteShashks, isSelect);
-            }
-        }
-        private void RemoveShashka(int row, int column, List<Shashka> collection)
-        {
-            var shashk = collection.Where(shahck => shahck.RowCoord == row)
-                                   .Where(shahck => shahck.ColumnCoord == column);
-            List<Shashka> list = shashk.ToList();
-            if (list.Count > 0)
-            {
-                Shashka rs = list[0];
-                collection.Remove(rs);
-            }
-        }
-        private void RemoveShashka(int row, int column, Team color)
-        {
-            if (color == Team.Black)
-            {
-                RemoveShashka(row, column, _blackShashks);
-            }
-            else
-            {
-                RemoveShashka(row, column, _whiteShashks);
-            }
-        }
         private bool Step(object sender)
         {
             (int row, int column) = GetCoord(sender);
@@ -286,14 +232,7 @@ namespace Shashki
             }
             return false;
         }
-        private (int row, int column) GetCoord(object sender)
-        {
-            Button btn = (Button)sender;
-            Border br = (Border)btn.DataContext;
-            int row = Grid.GetRow(br);
-            int column = Grid.GetColumn(br);
-            return (row, column);
-        }
+        
         private bool CheckEat(Shashka shashka)
         {
             List<Shashka> enemyList = new List<Shashka>();
@@ -344,6 +283,19 @@ namespace Shashki
                 }
             }
             if (_fookShashks.Count > 0) return true;
+            return false;
+        }
+        private bool TakeFook(int row, int column)
+        {
+            if (FindShashka(row, column, _fookShashks) && _fook)
+            {
+                var removeItem = GetShashka(row, column, _fookShashks);
+                RemoveShashka(removeItem.RowCoord, removeItem.ColumnCoord, removeItem.Color);
+                _fook = false;
+                _fookShashks.Clear();
+                Output();
+                return true;
+            }
             return false;
         }
     }
