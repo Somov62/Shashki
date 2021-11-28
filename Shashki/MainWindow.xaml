@@ -7,42 +7,22 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="1000" Width="1400" ResizeMode="CanMinimize" Background="#FF093B78">
     <Window.Resources>
-        <Style x:Key="letter" TargetType="Label">
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="32" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-        </Style>
-        <SolidColorBrush x:Key="Button.Static.Background" Color="DodgerBlue"/>
-        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FF1E70FF"/>
-        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FF093B78"/>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
-                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsDefaulted" Value="true">
-                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="true">
-                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+        <Style x:Key="BorderTriggers" TargetType="Border">
+            <Style.Triggers>
+                <!--<MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsEnabled" Value="True"/>
+                        <Condition Property="HorizontalAlignment" Value="Left"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Margin" Value="12, 12, 0, 12"/>
+                </MultiTrigger>-->
+                <Trigger Property="IsEnabled" Value="True">
+                    <Setter Property="Margin" Value="12"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Margin" Value="25"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
     <Grid>
@@ -143,5 +123,37 @@
             <Label Content="8" Style="{StaticResource letter}"/>
         </Border>
         <!--#endregion -->
+        
+        <!--#region UIPanel-->
+        <Grid Grid.Column="9" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="10">
+            <StackPanel Orientation="Vertical">
+                <Border Margin="30" Height="100" Background="DodgerBlue" BorderBrush="White" BorderThickness="2" CornerRadius="20">
+                    <Grid>
+                        <Border CornerRadius="18" Style="{StaticResource BorderTriggers}" IsEnabled="True" HorizontalAlignment="Left" Width="409">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.499, 0.49" EndPoint="0.5, 0.5" SpreadMethod="Pad">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStop Color="White" Offset="0.5"/>
+                                        <GradientStop Color="Transparent" Offset="0.5"/>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <Border CornerRadius="18" Style="{StaticResource BorderTriggers}" IsEnabled="True" HorizontalAlignment="Right" Width="409">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.499, 0.49" EndPoint="0.5, 0.5" SpreadMethod="Pad">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStop Color="Transparent" Offset="0.5"/>
+                                        <GradientStop Color="Black" Offset="0.5"/>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+
+                </Border>
+            </StackPanel>
+        </Grid>
+        <!--#endregion-->
     </Grid>
 </Window>

@@ -13,35 +13,40 @@ namespace Shashki
     {
         Border _figure;
         private bool _isSelected;
-        RadialGradientBrush _black = new RadialGradientBrush()
+        #region Colors
+        private static readonly Color blackBorder = new() { A = 255, R = 40,  G = 40,  B = 40  };
+        private static readonly Color blackBack   = new() { A = 255, R = 160, G = 160, B = 160 };
+        private static readonly Color whiteBorder = new() { A = 255, R = 147, G = 147, B = 147 };
+        private static readonly Color whiteBack   = new() { A = 255, R = 255, G = 255, B = 255 };
+        private readonly RadialGradientBrush _black = new()
         {
             GradientStops = new GradientStopCollection()
             {
-                new GradientStop(System.Windows.Media.Color.FromRgb(147, 147, 147), 0.317),
-                new GradientStop(System.Windows.Media.Color.FromRgb(147, 147, 147), 0.689),
-                new GradientStop(System.Windows.Media.Color.FromRgb(0, 0, 0), 0.234),
-                new GradientStop(System.Windows.Media.Color.FromRgb(0, 0, 0), 0.59),
-                new GradientStop(System.Windows.Media.Color.FromRgb(0, 0, 0), 0.78),
-                new GradientStop(System.Windows.Media.Color.FromRgb(147, 147, 147), 0.983),
-                new GradientStop(System.Windows.Media.Color.FromRgb(0, 0, 0), 0.43),
-                new GradientStop(System.Windows.Media.Color.FromRgb(0, 0, 0), 0.915),
+                new GradientStop(blackBorder, 0.317),
+                new GradientStop(blackBorder, 0.689),
+                new GradientStop(blackBack, 0.234),
+                new GradientStop(blackBack, 0.59),
+                new GradientStop(blackBack, 0.78),
+                new GradientStop(blackBorder, 0.983),
+                new GradientStop(blackBack, 0.43),
+                new GradientStop(blackBack, 0.915),
             }
         };
-        RadialGradientBrush _white = new RadialGradientBrush()
+        private readonly RadialGradientBrush _white = new()
         {
             GradientStops = new GradientStopCollection()
             {
-                new GradientStop(System.Windows.Media.Color.FromRgb(147, 147, 147), 0.317),
-                new GradientStop(System.Windows.Media.Color.FromRgb(147, 147, 147), 0.689),
-                new GradientStop(System.Windows.Media.Color.FromRgb(255, 255, 255), 0.234),
-                new GradientStop(System.Windows.Media.Color.FromRgb(255, 255, 255), 0.59),
-                new GradientStop(System.Windows.Media.Color.FromRgb(255, 255, 255), 0.78),
-                new GradientStop(System.Windows.Media.Color.FromRgb(147, 147, 147), 0.983),
-                new GradientStop(System.Windows.Media.Color.FromRgb(255, 255, 255), 0.43),
-                new GradientStop(System.Windows.Media.Color.FromRgb(255, 255, 255), 0.915),
+                new GradientStop(whiteBorder, 0.317),
+                new GradientStop(whiteBorder, 0.689),
+                new GradientStop(whiteBack, 0.234),
+                new GradientStop(whiteBack, 0.59),
+                new GradientStop(whiteBack, 0.78),
+                new GradientStop(whiteBorder, 0.983),
+                new GradientStop(whiteBack, 0.43),
+                new GradientStop(whiteBack, 0.915),
             }
         };
-
+        #endregion
         public Shashka(int rowCoord, int columnCoord, Team team)
         {
             Color = team;
@@ -53,12 +58,9 @@ namespace Shashki
         public int ColumnCoord { get; set; }
         public Team Color { get; set; }
         public bool IsSelected 
-        { 
-            get 
-            { 
-                return _isSelected; 
-            } 
-            set 
+        {
+            get => _isSelected;
+            set
             { 
                 _isSelected = value;
                 if (value) _figure.BorderBrush = Brushes.Gold;
