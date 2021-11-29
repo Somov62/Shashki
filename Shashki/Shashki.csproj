@@ -6,4 +6,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Comfortaa.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Comfortaa.ttf" />
+  </ItemGroup>
+
 </Project>

@@ -5,25 +5,69 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Shashki"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1000" Width="1400" ResizeMode="CanMinimize" Background="#FF093B78">
+        Title="MainWindow" Height="1000" Width="1400" ResizeMode="CanMinimize" Background="#FF093B78" FontFamily="./#Comfortaa">
     <Window.Resources>
-        <Style x:Key="BorderTriggers" TargetType="Border">
+        <Style x:Key="WhiteBorderTriggers" TargetType="Border">
             <Style.Triggers>
-                <!--<MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsEnabled" Value="True"/>
-                        <Condition Property="HorizontalAlignment" Value="Left"/>
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Margin" Value="12, 12, 0, 12"/>
-                </MultiTrigger>-->
                 <Trigger Property="IsEnabled" Value="True">
-                    <Setter Property="Margin" Value="12"/>
+                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="Background" Value="{DynamicResource WhiteBigPart}" />
+                    <Setter Property="TextBlock.Foreground" Value="Black" />
+                    <Setter Property="TextBlock.FontSize" Value="32" />
+                    <Setter Property="Padding" Value="35,20, 0, 0" />
                 </Trigger>
                 <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Margin" Value="25"/>
+                    <Setter Property="Margin" Value="23"/>
+                    <Setter Property="Background" Value="{DynamicResource WhiteSmallPart}" />
+                    <Setter Property="TextBlock.Foreground" Value="Gray" />
+                    <Setter Property="TextBlock.FontSize" Value="18" />
+                    <Setter Property="Padding" Value="35,15, 0, 0" />
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="BlackBorderTriggers" TargetType="Border">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="True">
+                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="Background" Value="{DynamicResource BlackBigPart}" />
+                    <Setter Property="TextBlock.Foreground" Value="White" />
+                    <Setter Property="TextBlock.FontSize" Value="32" />
+                    <Setter Property="Padding" Value="0, 20, 30, 0" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Margin" Value="23"/>
+                    <Setter Property="Background" Value="{DynamicResource BlackSmallPart}" />
+                    <Setter Property="TextBlock.Foreground" Value="Gray" />
+                    <Setter Property="TextBlock.FontSize" Value="18" />
+                    <Setter Property="Padding" Value="0, 15, 35, 0" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <LinearGradientBrush x:Key="WhiteBigPart" StartPoint="0.499, 0.49" EndPoint="0.5, 0.5" SpreadMethod="Pad">
+            <LinearGradientBrush.GradientStops>
+                <GradientStop Color="White" Offset="0.5"/>
+                <GradientStop Color="Transparent" Offset="0.5"/>
+            </LinearGradientBrush.GradientStops>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="BlackBigPart" StartPoint="0.499, 0.49" EndPoint="0.5, 0.5" SpreadMethod="Pad">
+            <LinearGradientBrush.GradientStops>
+                <GradientStop Color="Transparent" Offset="0.5"/>               
+                <GradientStop Color="Black" Offset="0.5"/>
+            </LinearGradientBrush.GradientStops>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="WhiteSmallPart" StartPoint="0.4992, 0.49" EndPoint="0.5, 0.5" SpreadMethod="Pad">
+            <LinearGradientBrush.GradientStops>
+                <GradientStop Color="White" Offset="0.5"/>
+                <GradientStop Color="Transparent" Offset="0.5"/>
+            </LinearGradientBrush.GradientStops>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="BlackSmallPart" StartPoint="0.519369, 0.51" EndPoint="0.52, 0.52" SpreadMethod="Pad">
+            <LinearGradientBrush.GradientStops>
+                <GradientStop Color="Transparent" Offset="0.5"/>
+                <GradientStop Color="Black" Offset="0.5"/>
+            </LinearGradientBrush.GradientStops>
+        </LinearGradientBrush>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -125,32 +169,22 @@
         <!--#endregion -->
         
         <!--#region UIPanel-->
-        <Grid Grid.Column="9" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="10">
+        <Label Content="Кто ходит?" Grid.Column="9" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource letter}"/>
+        <Grid  Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="8">
+            <Label Content="Скушано: " Style="{StaticResource letter}" HorizontalAlignment="Left"/>
+        </Grid>
+        <Grid Grid.Column="9" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="9">
             <StackPanel Orientation="Vertical">
-                <Border Margin="30" Height="100" Background="DodgerBlue" BorderBrush="White" BorderThickness="2" CornerRadius="20">
+                <Border Margin="30, -2" Height="100" Background="#FF093B78" BorderBrush="DodgerBlue" BorderThickness="4" CornerRadius="20">
                     <Grid>
-                        <Border CornerRadius="18" Style="{StaticResource BorderTriggers}" IsEnabled="True" HorizontalAlignment="Left" Width="409">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0.499, 0.49" EndPoint="0.5, 0.5" SpreadMethod="Pad">
-                                    <LinearGradientBrush.GradientStops>
-                                        <GradientStop Color="White" Offset="0.5"/>
-                                        <GradientStop Color="Transparent" Offset="0.5"/>
-                                    </LinearGradientBrush.GradientStops>
-                                </LinearGradientBrush>
-                            </Border.Background>
+                        <Border x:Name="whitePart" CornerRadius="18" Style="{StaticResource WhiteBorderTriggers}" IsEnabled="True" HorizontalAlignment="Left" Width="409">
+                            <TextBlock x:Name="whitePartLabel" Text="Белые" VerticalAlignment="Top" FontWeight="SemiBold"/>
                         </Border>
-                        <Border CornerRadius="18" Style="{StaticResource BorderTriggers}" IsEnabled="True" HorizontalAlignment="Right" Width="409">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0.499, 0.49" EndPoint="0.5, 0.5" SpreadMethod="Pad">
-                                    <LinearGradientBrush.GradientStops>
-                                        <GradientStop Color="Transparent" Offset="0.5"/>
-                                        <GradientStop Color="Black" Offset="0.5"/>
-                                    </LinearGradientBrush.GradientStops>
-                                </LinearGradientBrush>
-                            </Border.Background>
+                        <Border x:Name="blackPart" CornerRadius="18" Style="{StaticResource BlackBorderTriggers}" IsEnabled="False" HorizontalAlignment="Right" Width="409">
+                            <TextBlock x:Name="blackpartLabel" Text="Чёрные" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold"/>
                         </Border>
+                        <Line X1="114" Y1="105" X2="295" Y2="-2" Stroke="DodgerBlue" StrokeThickness="4"/>
                     </Grid>
-
                 </Border>
             </StackPanel>
         </Grid>
