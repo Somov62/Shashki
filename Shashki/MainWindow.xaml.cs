@@ -24,7 +24,7 @@ namespace Shashki
         #region Fields
         private List<Shashka> _whiteShashks = new List<Shashka>()
         {
-            new Shashka(0, 1, Team.White),
+            new Shashka(0, 1, Team.White) { IsDamka = true },
             new Shashka(0, 3, Team.White),
             new Shashka(0, 5, Team.White),
             new Shashka(0, 7, Team.White),
@@ -39,7 +39,7 @@ namespace Shashki
         };
         private List<Shashka> _blackShashks = new List<Shashka>()
         {
-            new Shashka(6, 1, Team.Black),
+            new Shashka(6, 1, Team.Black) { IsDamka = true },
             new Shashka(6, 3, Team.Black),
             new Shashka(6, 5, Team.Black),
             new Shashka(6, 7, Team.Black),
@@ -137,6 +137,14 @@ namespace Shashki
                             Output();
                             return;
                         }
+                    }
+                    if (SelectedShahka.Color == Team.Black && SelectedShahka.RowCoord == 0)
+                    {
+                        SelectedShahka.IsDamka = true;
+                    }
+                    if (SelectedShahka.Color == Team.White && SelectedShahka.RowCoord == 7)
+                    {
+                        SelectedShahka.IsDamka = true;
                     }
                     Output();
                     SelectedShahka.IsSelected = false;
