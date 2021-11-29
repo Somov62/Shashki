@@ -60,7 +60,6 @@ namespace Shashki
 
         private Shashka SelectedShahka;
         #endregion
-
         public MainWindow()
         {
             InitializeComponent();
@@ -113,7 +112,7 @@ namespace Shashki
             {
                 if (IsWhiteGo)
                 {
-                    if (TakeFook(row, column)) return; 
+                    if (TakeFook(row, column)) return;
                     FindShashka(row, column, _whiteShashks, true);
                     return;
                 }
@@ -146,7 +145,6 @@ namespace Shashki
                 }
             }
         }
-
         private bool Step(object sender)
         {
             (int row, int column) = GetCoord(sender);
@@ -231,9 +229,12 @@ namespace Shashki
                     }
                 }
             }
+            if (SelectedShahka.IsDamka == true)
+            { 
+            }
             return false;
         }
-        
+
         private bool CheckEat(Shashka shashka)
         {
             List<Shashka> enemyList = new List<Shashka>();
@@ -267,9 +268,180 @@ namespace Shashki
                     if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord + 2, _whiteShashks)) return true;
                 }
             }
+
+            if (shashka.IsDamka == true)
+            {
+                if (CheckEatDamkaOneDiagonal(shashka, -1, -1)) return true;
+                if (CheckEatDamkaOneDiagonal(shashka, -1, +1)) return true;
+                if (CheckEatDamkaOneDiagonal(shashka, +1, -1)) return true;
+                if (CheckEatDamkaOneDiagonal(shashka, +1, +1)) return true;
+            }
+
             return false;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="damka">проверяемая дамка</param>
+        /// <param name="x"> если меньше нуля то право иначе лево</param>
+        /// <param name="y"> если меньше нуля то верх иначе </param>
+        /// <returns></returns>
+        private bool CheckEatDamkaOneDiagonal(Shashka damka, int x, int y, bool wasEnemy = false)
+        {
+            if (x < 0 && y < 0)
+            {
+                //проверка на наличие дружественной шашки на -1 -1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color))
+                {
+                    return false;
+                }
 
+                //вычисляем цвет врага
+                Team colorEnemy;
+                if (damka.Color == Team.White)
+                    colorEnemy = Team.Black;
+                else
+                    colorEnemy = Team.White;
+
+                //проверка на наличие вражеской шашки на -1 -1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, colorEnemy))
+                {
+                    if (wasEnemy)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y, true);
+                    }
+                }
+
+                //при отсутствии шашек на -1 -1 по отношениию к прошлой проверки
+                if (wasEnemy)
+                {
+                    return true;
+                }
+                else
+                {
+                    return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y, false);
+                }
+            }
+            if (x >= 0 && y < 0)
+            {
+                //проверка на наличие дружественной шашки на +1 -1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color))
+                {
+                    return false;
+                }
+
+                //вычисляем цвет врага
+                Team colorEnemy;
+                if (damka.Color == Team.White)
+                    colorEnemy = Team.Black;
+                else
+                    colorEnemy = Team.White;
+
+                //проверка на наличие вражеской шашки на +1 -1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1, colorEnemy))
+                {
+                    if (wasEnemy)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y, true);
+                    }
+                }
+
+                //при отсутствии шашек на +1 -1 по отношениию к прошлой проверки
+                if (wasEnemy)
+                {
+                    return true;
+                }
+                else
+                {
+                    return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y, false);
+                }
+            }
+            if (x < 0 && y >= 0)
+            {
+                //проверка на наличие дружественной шашки на -1 +1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color))
+                {
+                    return false;
+                }
+
+                //вычисляем цвет врага
+                Team colorEnemy;
+                if (damka.Color == Team.White)
+                    colorEnemy = Team.Black;
+                else
+                    colorEnemy = Team.White;
+
+                //проверка на наличие вражеской шашки на -1 +1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1, colorEnemy))
+                {
+                    if (wasEnemy)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color), x, y, true);
+                    }
+                }
+
+                //при отсутствии шашек на -1 +1 по отношениию к прошлой проверки
+                if (wasEnemy)
+                {
+                    return true;
+                }
+                else
+                {
+                    return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color), x, y, false);
+                }
+            }
+            if (x >= 0 && y >= 0)
+            {
+                //проверка на наличие дружественной шашки на +1 +1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color))
+                {
+                    return false;
+                }
+
+                //вычисляем цвет врага
+                Team colorEnemy;
+                if (damka.Color == Team.White)
+                    colorEnemy = Team.Black;
+                else
+                    colorEnemy = Team.White;
+
+                //проверка на наличие вражеской шашки на +1 +1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1, colorEnemy))
+                {
+                    if (wasEnemy)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y, true);
+                    }
+                }
+
+                //при отсутствии шашек на +1 +1 по отношениию к прошлой проверки
+                if (wasEnemy)
+                {
+                    return true;
+                }
+                else
+                {
+                    return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y, false);
+                }
+            }
+            return false;
+        }
         private bool CheckFook()
         {
             _fookShashks.Clear();
