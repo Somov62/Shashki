@@ -6,7 +6,7 @@
     <Application.Resources>
         <Style x:Key="letter" TargetType="Label">
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="32" />
+            <Setter Property="FontSize" Value="30" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
