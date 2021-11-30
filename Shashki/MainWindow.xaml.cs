@@ -480,12 +480,10 @@ namespace Shashki
         {
             if (x < 0 && y < 0)
             {
-                //проверка на наличие дружественной шашки на -1 -1 по отношениию к прошлой проверки
                 if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1))
                 {
                     return false;
                 }
-                //при отсутствии шашек на -1 -1 по отношениию к прошлой проверки
                 else
                 {
                     x++;
@@ -495,42 +493,36 @@ namespace Shashki
             }
             if (x > 0 && y < 0)
             {
-                //проверка на наличие дружественной шашки на +1 -1 по отношениию к прошлой проверки
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1))
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1))
                 {
                     return false;
                 }
-                //при отсутствии шашек на +1 -1 по отношениию к прошлой проверки
                 else
                 {
                     x--;
                     y++;
-                    return CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y);
+                    return CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color), x, y);
                 }
             }
             if (x < 0 && y > 0)
             {
-                //проверка на наличие дружественной шашки на -1 +1 по отношениию к прошлой проверки
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1))
+                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1))
                 {
                     return false;
                 }
-                //при отсутствии шашек на -1 +1 по отношениию к прошлой проверки
                 else
                 {
                     x++;
                     y--;
-                    return CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y);
+                    return CheckDamkaCanGo(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y);
                 }
             }
             if (x > 0 && y > 0)
             {
-                //проверка на наличие дружественной шашки на +1 +1 по отношениию к прошлой проверки
                 if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1))
                 {
                     return false;
                 }
-                //при отсутствии шашек на +1 +1 по отношениию к прошлой проверки
                 else
                 {
                     x--;
