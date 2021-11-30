@@ -22,7 +22,7 @@ namespace Shashki
     public partial class MainWindow : Window
     {
         #region Fields
-        private List<Shashka> _whiteShashks = new List<Shashka>()
+        private List<Shashka> _whiteShashks = new List<Shashka>(12)
         {
             new Shashka(0, 1, Team.White){ IsDamka=true},
             new Shashka(0, 3, Team.White),
@@ -37,7 +37,7 @@ namespace Shashki
             new Shashka(2, 5, Team.White),
             new Shashka(2, 7, Team.White),
         };
-        private List<Shashka> _blackShashks = new List<Shashka>()
+        private List<Shashka> _blackShashks = new List<Shashka>(12)
         {
             new Shashka(6, 1, Team.Black){ IsDamka=true},
             new Shashka(6, 3, Team.Black),
@@ -103,6 +103,8 @@ namespace Shashki
                 Grid.SetRow(item.Figure, item.RowCoord);
                 Grid.SetColumn(item.Figure, item.ColumnCoord);
             }
+            whiteCount.Content = (_whiteShashks.Capacity - _whiteShashks.Count).ToString();
+            blackCount.Content = (_blackShashks.Capacity - _blackShashks.Count).ToString();
         }
 
         public void Button_Click(object sender, RoutedEventArgs e)
