@@ -24,33 +24,33 @@ namespace Shashki
         #region Fields
         private List<Shashka> _whiteShashks = new List<Shashka>()
         {
-            new Shashka(0, 1, Team.White),
-            new Shashka(0, 3, Team.White),
-            new Shashka(0, 5, Team.White),
-            new Shashka(0, 7, Team.White),
-            new Shashka(1, 0, Team.White),
-            new Shashka(1, 2, Team.White),
-            new Shashka(1, 4, Team.White),
-            new Shashka(1, 6, Team.White),
-            new Shashka(2, 1, Team.White),
-            new Shashka(2, 3, Team.White),
-            new Shashka(2, 5, Team.White),
-            new Shashka(2, 7, Team.White),
+            new Shashka(0, 1, Team.White){ IsDamka=true},
+            //new Shashka(0, 3, Team.White),
+            //new Shashka(0, 5, Team.White),
+            //new Shashka(0, 7, Team.White),
+            //new Shashka(1, 0, Team.White),
+            //new Shashka(1, 2, Team.White),
+            //new Shashka(1, 4, Team.White),
+            //new Shashka(1, 6, Team.White),
+            //new Shashka(2, 1, Team.White),
+            //new Shashka(2, 3, Team.White),
+            //new Shashka(2, 5, Team.White),
+            //new Shashka(2, 7, Team.White),
         };
         private List<Shashka> _blackShashks = new List<Shashka>()
         {
-            new Shashka(6, 1, Team.Black),
-            new Shashka(6, 3, Team.Black),
-            new Shashka(6, 5, Team.Black),
-            new Shashka(6, 7, Team.Black),
-            new Shashka(7, 0, Team.Black),
-            new Shashka(7, 2, Team.Black),
-            new Shashka(7, 4, Team.Black),
-            new Shashka(7, 6, Team.Black),
-            new Shashka(5, 0, Team.Black),
-            new Shashka(5, 2, Team.Black),
-            new Shashka(5, 4, Team.Black),
-            new Shashka(5, 6, Team.Black),
+            new Shashka(6, 1, Team.Black){ IsDamka=true},
+            //new Shashka(6, 3, Team.Black),
+            //new Shashka(6, 5, Team.Black),
+            //new Shashka(6, 7, Team.Black),
+            //new Shashka(7, 0, Team.Black),
+            //new Shashka(7, 2, Team.Black),
+            //new Shashka(7, 4, Team.Black),
+            //new Shashka(7, 6, Team.Black),
+            //new Shashka(5, 0, Team.Black),
+            //new Shashka(5, 2, Team.Black),
+            //new Shashka(5, 4, Team.Black),
+            //new Shashka(5, 6, Team.Black),
         };
         private List<Shashka> _fookShashks = new List<Shashka>();
 
@@ -249,7 +249,13 @@ namespace Shashki
                 //проверка что клик произошол на диагонали дамки
                 if (Math.Abs(SelectedShahka.RowCoord - row) == Math.Abs(SelectedShahka.ColumnCoord - column))
                 {
-                    
+                    if (!_eatEvent && CheckDamkaCanGo(SelectedShahka, (SelectedShahka.RowCoord - row), (SelectedShahka.ColumnCoord - column)))
+                    {
+                        SelectedShahka.RowCoord = row;
+                        SelectedShahka.ColumnCoord = column;
+                        _eatEvent = false;
+                        return true;
+                    }
                 }
             }
             return false;
@@ -462,57 +468,82 @@ namespace Shashki
             }
             return false;
         }
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="damka"></param>
-        ///// <param name="x">равны по модулю(обязательно)-----меньше нуля</param>
-        ///// <param name="y">равны по модулю(обязательно)</param>
-        ///// <param name="wasEnemy"></param>
-        ///// <returns></returns>
-        //private bool CheckDamkaCanGoAndEat(Shashka damka, int x, int y, bool wasEnemy = false)
-        //{
-        //    if (x < 0 && y < 0)
-        //    {
-        //        //проверка на наличие дружественной шашки на -1 -1 по отношениию к прошлой проверки
-        //        if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color))
-        //        {
-        //            return false;
-        //        }
-
-        //        //вычисляем цвет врага
-        //        Team colorEnemy;
-        //        if (damka.Color == Team.White)
-        //            colorEnemy = Team.Black;
-        //        else
-        //            colorEnemy = Team.White;
-
-        //        //проверка на наличие вражеской шашки на -1 -1 по отношениию к прошлой проверки
-        //        if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, colorEnemy))
-        //        {
-        //            if (wasEnemy)
-        //            {
-        //                return false;
-        //            }
-        //            else
-        //            {
-        //                return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y, true);
-        //            }
-        //        }
-
-        //        //при отсутствии шашек на -1 -1 по отношениию к прошлой проверки
-        //        if (wasEnemy)
-        //        {
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y, false);
-        //        }
-        //    }
-            
-        //    return false;
-        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="damka"></param>
+        /// <param name="x">равны по модулю(обязательно)-----меньше нуля то низ   если больше то вверх</param>
+        /// <param name="y">равны по модулю(обязательно)-----меньше нуля то лево  если больше то право</param>
+        /// <param name="wasEnemy"></param>
+        /// <returns></returns>
+        private bool CheckDamkaCanGo(Shashka damka, int x, int y)
+        {
+            if (x < 0 && y < 0)
+            {
+                //проверка на наличие дружественной шашки на -1 -1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1))
+                {
+                    return false;
+                }
+                //при отсутствии шашек на -1 -1 по отношениию к прошлой проверки
+                else
+                {
+                    x++;
+                    y++;
+                    return CheckDamkaCanGo(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y);
+                }
+            }
+            if (x > 0 && y < 0)
+            {
+                //проверка на наличие дружественной шашки на +1 -1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1))
+                {
+                    return false;
+                }
+                //при отсутствии шашек на +1 -1 по отношениию к прошлой проверки
+                else
+                {
+                    x--;
+                    y++;
+                    return CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y);
+                }
+            }
+            if (x < 0 && y > 0)
+            {
+                //проверка на наличие дружественной шашки на -1 +1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1))
+                {
+                    return false;
+                }
+                //при отсутствии шашек на -1 +1 по отношениию к прошлой проверки
+                else
+                {
+                    x++;
+                    y--;
+                    return CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y);
+                }
+            }
+            if (x > 0 && y > 0)
+            {
+                //проверка на наличие дружественной шашки на +1 +1 по отношениию к прошлой проверки
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1))
+                {
+                    return false;
+                }
+                //при отсутствии шашек на +1 +1 по отношениию к прошлой проверки
+                else
+                {
+                    x--;
+                    y--;
+                    return CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y);
+                }
+            }
+            if (x == 0)
+            {
+                return true;
+            }
+            return false;
+        }
         private bool CheckFook()
         {
             _fookShashks.Clear();

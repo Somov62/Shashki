@@ -59,6 +59,17 @@ namespace Shashki
                 return FindShashka(row, column, _whiteShashks, isSelect);
             }
         }
+        private bool FindShashka(int row, int column)
+        {
+            if (FindShashka(row, column, _blackShashks))
+            {
+                return true;
+            }
+            else
+            {
+                return FindShashka(row, column, _whiteShashks);
+            }
+        }
         #endregion
 
         #region RemoveShashka
