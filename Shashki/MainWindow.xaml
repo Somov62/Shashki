@@ -5,13 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Shashki"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1000" Width="1400" ResizeMode="CanMinimize" Background="#FF093B78" FontFamily="./#Comfortaa">
+        Title="MainWindow" Width="1220" Height="800" ResizeMode="CanResize" Background="#FF093B78" FontFamily="./#Comfortaa">
     <Window.Resources>
         
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
             <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -21,7 +20,8 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
-            <ColumnDefinition Width="400"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="420"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
