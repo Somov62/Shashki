@@ -24,7 +24,7 @@ namespace Shashki
         #region Fields
         private List<Shashka> _whiteShashks = new List<Shashka>()
         {
-            new Shashka(0, 1, Team.White) { IsDamka = true },
+            new Shashka(0, 1, Team.White),
             new Shashka(0, 3, Team.White),
             new Shashka(0, 5, Team.White),
             new Shashka(0, 7, Team.White),
@@ -39,7 +39,7 @@ namespace Shashki
         };
         private List<Shashka> _blackShashks = new List<Shashka>()
         {
-            new Shashka(6, 1, Team.Black) { IsDamka = true },
+            new Shashka(6, 1, Team.Black),
             new Shashka(6, 3, Team.Black),
             new Shashka(6, 5, Team.Black),
             new Shashka(6, 7, Team.Black),
@@ -158,89 +158,99 @@ namespace Shashki
         private bool Step(object sender)
         {
             (int row, int column) = GetCoord(sender);
-            if (!_eatEvent)
+            if (!SelectedShahka.IsDamka)
             {
-                if (SelectedShahka.Color == Team.Black)
+                //если шашка не является дамкой...
+                if (!_eatEvent)
                 {
-                    if (SelectedShahka.RowCoord - row == 1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
+                    if (SelectedShahka.Color == Team.Black)
                     {
-                        if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                        if (SelectedShahka.RowCoord - row == 1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
                         {
-                            SelectedShahka.RowCoord = row;
-                            SelectedShahka.ColumnCoord = column;
-                            _eatEvent = false;
-                            return true;
+                            if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                            {
+                                SelectedShahka.RowCoord = row;
+                                SelectedShahka.ColumnCoord = column;
+                                _eatEvent = false;
+                                return true;
+                            }
+                        }
+                    }
+                    if (SelectedShahka.Color == Team.White)
+                    {
+                        if (SelectedShahka.RowCoord - row == -1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
+                        {
+                            if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                            {
+                                SelectedShahka.RowCoord = row;
+                                SelectedShahka.ColumnCoord = column;
+                                _eatEvent = false;
+                                return true;
+                            }
                         }
                     }
                 }
-                if (SelectedShahka.Color == Team.White)
+                if (Math.Abs(SelectedShahka.RowCoord - row) == 2 && Math.Abs(SelectedShahka.ColumnCoord - column) == 2)
                 {
-                    if (SelectedShahka.RowCoord - row == -1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
+                    if (FindShashka(row, column, _blackShashks)) return false;
+                    if (FindShashka(row, column, _whiteShashks)) return false;
+                    List<Shashka> enemyList = new List<Shashka>();
+                    if (SelectedShahka.Color == Team.Black) enemyList = _whiteShashks;
+                    else enemyList = _blackShashks;
+                    if (SelectedShahka.RowCoord > row && SelectedShahka.ColumnCoord > column)
                     {
-                        if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                        if (FindShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList))
                         {
+                            RemoveShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList);
                             SelectedShahka.RowCoord = row;
                             SelectedShahka.ColumnCoord = column;
-                            _eatEvent = false;
+                            _eatEvent = true;
+                            return true;
+                        }
+                    }
+                    if (SelectedShahka.RowCoord < row && SelectedShahka.ColumnCoord < column)
+                    {
+                        if (FindShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord + 1, enemyList))
+                        {
+                            RemoveShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord + 1, enemyList);
+                            SelectedShahka.RowCoord = row;
+                            SelectedShahka.ColumnCoord = column;
+                            _eatEvent = true;
+                            return true;
+                        }
+                    }
+                    if (SelectedShahka.RowCoord < row && SelectedShahka.ColumnCoord > column)
+                    {
+                        if (FindShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord - 1, enemyList))
+                        {
+                            RemoveShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord - 1, enemyList);
+                            SelectedShahka.RowCoord = row;
+                            SelectedShahka.ColumnCoord = column;
+                            _eatEvent = true;
+                            return true;
+                        }
+                    }
+                    if (SelectedShahka.RowCoord > row && SelectedShahka.ColumnCoord < column)
+                    {
+                        if (FindShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord + 1, enemyList))
+                        {
+                            RemoveShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord + 1, enemyList);
+                            SelectedShahka.RowCoord = row;
+                            SelectedShahka.ColumnCoord = column;
+                            _eatEvent = true;
                             return true;
                         }
                     }
                 }
             }
-            if (Math.Abs(SelectedShahka.RowCoord - row) == 2 && Math.Abs(SelectedShahka.ColumnCoord - column) == 2)
+            else
             {
-                if (FindShashka(row, column, _blackShashks)) return false;
-                if (FindShashka(row, column, _whiteShashks)) return false;
-                List<Shashka> enemyList = new List<Shashka>();
-                if (SelectedShahka.Color == Team.Black) enemyList = _whiteShashks;
-                else enemyList = _blackShashks;
-                if (SelectedShahka.RowCoord > row && SelectedShahka.ColumnCoord > column)
+                //если шашка является дамкой...
+                //проверка что клик произошол на диагонали дамки
+                if (Math.Abs(SelectedShahka.RowCoord - row) == Math.Abs(SelectedShahka.ColumnCoord - column))
                 {
-                    if (FindShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList))
-                    {
-                        RemoveShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList);
-                        SelectedShahka.RowCoord = row;
-                        SelectedShahka.ColumnCoord = column;
-                        _eatEvent = true;
-                        return true;
-                    }
+                    
                 }
-                if (SelectedShahka.RowCoord < row && SelectedShahka.ColumnCoord < column)
-                {
-                    if (FindShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord + 1, enemyList))
-                    {
-                        RemoveShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord + 1, enemyList);
-                        SelectedShahka.RowCoord = row;
-                        SelectedShahka.ColumnCoord = column;
-                        _eatEvent = true;
-                        return true;
-                    }
-                }
-                if (SelectedShahka.RowCoord < row && SelectedShahka.ColumnCoord > column)
-                {
-                    if (FindShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord - 1, enemyList))
-                    {
-                        RemoveShashka(SelectedShahka.RowCoord + 1, SelectedShahka.ColumnCoord - 1, enemyList);
-                        SelectedShahka.RowCoord = row;
-                        SelectedShahka.ColumnCoord = column;
-                        _eatEvent = true;
-                        return true;
-                    }
-                }
-                if (SelectedShahka.RowCoord > row && SelectedShahka.ColumnCoord < column)
-                {
-                    if (FindShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord + 1, enemyList))
-                    {
-                        RemoveShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord + 1, enemyList);
-                        SelectedShahka.RowCoord = row;
-                        SelectedShahka.ColumnCoord = column;
-                        _eatEvent = true;
-                        return true;
-                    }
-                }
-            }
-            if (SelectedShahka.IsDamka == true)
-            { 
             }
             return false;
         }
@@ -452,6 +462,57 @@ namespace Shashki
             }
             return false;
         }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="damka"></param>
+        ///// <param name="x">равны по модулю(обязательно)-----меньше нуля</param>
+        ///// <param name="y">равны по модулю(обязательно)</param>
+        ///// <param name="wasEnemy"></param>
+        ///// <returns></returns>
+        //private bool CheckDamkaCanGoAndEat(Shashka damka, int x, int y, bool wasEnemy = false)
+        //{
+        //    if (x < 0 && y < 0)
+        //    {
+        //        //проверка на наличие дружественной шашки на -1 -1 по отношениию к прошлой проверки
+        //        if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color))
+        //        {
+        //            return false;
+        //        }
+
+        //        //вычисляем цвет врага
+        //        Team colorEnemy;
+        //        if (damka.Color == Team.White)
+        //            colorEnemy = Team.Black;
+        //        else
+        //            colorEnemy = Team.White;
+
+        //        //проверка на наличие вражеской шашки на -1 -1 по отношениию к прошлой проверки
+        //        if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, colorEnemy))
+        //        {
+        //            if (wasEnemy)
+        //            {
+        //                return false;
+        //            }
+        //            else
+        //            {
+        //                return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y, true);
+        //            }
+        //        }
+
+        //        //при отсутствии шашек на -1 -1 по отношениию к прошлой проверки
+        //        if (wasEnemy)
+        //        {
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y, false);
+        //        }
+        //    }
+            
+        //    return false;
+        //}
         private bool CheckFook()
         {
             _fookShashks.Clear();
