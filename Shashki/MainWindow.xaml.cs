@@ -58,8 +58,12 @@ namespace Shashki
         private bool IsWhiteGo = true;
         private bool _fook = false;
 
+        private int _damkEatRow;
+        private int _damkEatColumn;
+
         private Shashka SelectedShahka;
         #endregion
+
         public MainWindow()
         {
             InitializeComponent();
@@ -535,6 +539,126 @@ namespace Shashki
             if (x == 0)
             {
                 return true;
+            }
+            return false;
+        }
+        private bool CheckDamkaCanEat(Shashka damka, int x, int y)
+        {
+            if (x < 0 && y < 0)
+            {
+                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color))
+                {
+                    return false;
+                }
+
+                //вычисляем цвет врага
+                Team colorEnemy;
+                if (damka.Color == Team.White)
+                    colorEnemy = Team.Black;
+                else
+                    colorEnemy = Team.White;
+
+                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1, colorEnemy))
+                {
+                    {
+                        _damkEatRow = damka.RowCoord;
+                        _damkEatColumn = damka.ColumnCoord;
+                        if (CheckDamkaCanGo(damka, x, y))
+                            return true;
+                        else
+                            return false;
+                    }
+                }
+                x++;
+                y++;
+                return CheckDamkaCanEat(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y);
+            }
+            if (x > 0 && y < 0)
+            {
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color))
+                {
+                    return false;
+                }
+
+                //вычисляем цвет врага
+                Team colorEnemy;
+                if (damka.Color == Team.White)
+                    colorEnemy = Team.Black;
+                else
+                    colorEnemy = Team.White;
+
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1, colorEnemy))
+                {
+                    {
+                        _damkEatRow = damka.RowCoord;
+                        _damkEatColumn = damka.ColumnCoord;
+                        if (CheckDamkaCanGo(damka, x, y))
+                            return true;
+                        else
+                            return false;
+                    }
+                }
+                x--;
+                y++;
+                return CheckDamkaCanEat(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y);
+            }
+            if (x < 0 && y > 0)
+            {
+                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color))
+                {
+                    return false;
+                }
+
+                //вычисляем цвет врага
+                Team colorEnemy;
+                if (damka.Color == Team.White)
+                    colorEnemy = Team.Black;
+                else
+                    colorEnemy = Team.White;
+
+                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1, colorEnemy))
+                {
+                    {
+                        _damkEatRow = damka.RowCoord;
+                        _damkEatColumn = damka.ColumnCoord;
+                        if (CheckDamkaCanGo(damka, x, y))
+                            return true;
+                        else
+                            return false;
+                    }
+                }
+                x++;
+                y--;
+                return CheckDamkaCanEat(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y);
+            }
+            if (x > 0 && y > 0)
+            {
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color))
+                {
+                    return false;
+                }
+
+                //вычисляем цвет врага
+                Team colorEnemy;
+                if (damka.Color == Team.White)
+                    colorEnemy = Team.Black;
+                else
+                    colorEnemy = Team.White;
+
+                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, colorEnemy))
+                {
+                    {
+                        _damkEatRow = damka.RowCoord;
+                        _damkEatColumn = damka.ColumnCoord;
+                        if (CheckDamkaCanGo(damka, x, y))
+                            return true;
+                        else
+                            return false;
+                    }
+                }
+                x--;
+                y--;
+                return CheckDamkaCanEat(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y);
             }
             return false;
         }
