@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <None Remove="Comfortaa.ttf" />
+    <None Remove="png\stripped_birch_log_top.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Comfortaa.ttf" />
+    <Resource Include="png\stripped_birch_log_top.png" />
   </ItemGroup>
 
 </Project>

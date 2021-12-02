@@ -76,7 +76,10 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
         </Grid>
-        <!--#region Coords letters-->
+        <Border >
+            <Image Margin="0,0,-48,-50" Stretch="Fill" Source="pack://siteoforigin:,,,/stripped_birch_log_top.png"/>
+        </Border>
+            <!--#region Coords letters-->
         <Border Grid.Row="0" Grid.Column="1">
             <Label Content="A" Style="{StaticResource letter}"/>
         </Border>
