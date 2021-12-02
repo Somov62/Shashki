@@ -156,6 +156,7 @@ namespace Shashki
                     Output();
                     SelectedShahka.IsSelected = false;
                     IsWhiteGo = !IsWhiteGo;
+                    stepBorder.IsEnabled = IsWhiteGo;
                     whitePart.IsEnabled = IsWhiteGo;
                     blackPart.IsEnabled = !IsWhiteGo;
                     _eatEvent = false;

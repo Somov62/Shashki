@@ -107,6 +107,22 @@
                 <GradientStop Color="Black" Offset="0.5"/>
             </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
+
+        <Style x:Key="BorderPlayGroundTriggers" TargetType="Border">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="True">
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="BorderBrush" Value="DodgerBlue"/>
+                    <Setter Property="BorderThickness" Value="3"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#FFAAAAAA"/>
+                    <Setter Property="BorderBrush" Value="White"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+               
         <!--#endregion-->
     </Application.Resources>
 </Application>

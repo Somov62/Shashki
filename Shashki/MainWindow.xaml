@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Shashki"
         mc:Ignorable="d"
-        Title="MainWindow" Width="1220" Height="800" ResizeMode="CanMinimize" Background="#FF093B78" FontFamily="./#Comfortaa">
+        Title="SHAHSKI: 2022 REMASTER EDITION | DIRECTED BY ISP-31 | THANKS FOR 500 BILLION DOWLOANDS | Продам гараж: 8-910-505-47-90 недорого! | DEDICATED TO NOVITSKYI AND AFANASYEV" Width="1220" Height="800" ResizeMode="CanMinimize" Background="#FF093B78" FontFamily="./#Comfortaa">
     <Window.Resources>
         <RadialGradientBrush x:Key="whiteShaska">
             <GradientStop Color="#FF939393" Offset="0.317"/>
@@ -54,7 +54,13 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid  x:Name="playGround" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="8" Grid.RowSpan="8">
+        
+        <!--#region Border PlayGround-->
+        <Border x:Name="stepBorder" Style="{StaticResource BorderPlayGroundTriggers}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="10" Grid.RowSpan="10" Margin="65" CornerRadius="10"/>
+        <Border IsEnabled="{Binding ElementName=stepBorder, Path=IsEnabled}" BorderThickness="5" Style="{StaticResource BorderPlayGroundTriggers}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="10" Grid.RowSpan="10" Margin="76" CornerRadius="4"/>
+        <!--#endregion-->
+        
+        <Grid Margin="0, 2, 0, 2" x:Name="playGround" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="8" Grid.RowSpan="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -76,8 +82,9 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
         </Grid>
+        
         <!--#region Coords letters-->
-        <Border Grid.Row="0" Grid.Column="1">
+        <Border Grid.Row="0" Grid.Column="1" >
             <Label Content="A" Style="{StaticResource letter}"/>
         </Border>
         <Border Grid.Row="0" Grid.Column="2">
@@ -102,44 +109,47 @@
             <Label Content="H" Style="{StaticResource letter}"/>
         </Border>
         <Border Grid.Row="1" Grid.Column="0">
-            <Label Content="1" Style="{StaticResource letter}"/>
+            <Label Content="1" Style="{StaticResource letter}" Margin="0, 0, 14, 0"/>
         </Border>
         <Border Grid.Row="2" Grid.Column="0">
-            <Label Content="2" Style="{StaticResource letter}"/>
+            <Label Content="2" Style="{StaticResource letter}" Margin="0, 0, 14, 0"/>
         </Border>
         <Border Grid.Row="3" Grid.Column="0">
-            <Label Content="3" Style="{StaticResource letter}"/>
+            <Label Content="3" Style="{StaticResource letter}" Margin="0, 0, 14, 0"/>
         </Border>
         <Border Grid.Row="4" Grid.Column="0">
-            <Label Content="4" Style="{StaticResource letter}"/>
+            <Label Content="4" Style="{StaticResource letter}" Margin="0, 0, 14, 0"/>
         </Border>
         <Border Grid.Row="5" Grid.Column="0">
-            <Label Content="5" Style="{StaticResource letter}"/>
+            <Label Content="5" Style="{StaticResource letter}" Margin="0, 0, 14, 0"/>
         </Border>
         <Border Grid.Row="6" Grid.Column="0">
-            <Label Content="6" Style="{StaticResource letter}"/>
+            <Label Content="6" Style="{StaticResource letter}" Margin="0, 0, 14, 0"/>
         </Border>
         <Border Grid.Row="7" Grid.Column="0">
-            <Label Content="7" Style="{StaticResource letter}"/>
+            <Label Content="7" Style="{StaticResource letter}" Margin="0, 0, 14, 0"/>
         </Border>
         <Border Grid.Row="8" Grid.Column="0">
-            <Label Content="8" Style="{StaticResource letter}"/>
+            <Label Content="8" Style="{StaticResource letter}" Margin="0, 0, 14, 0"/>
         </Border>
         <!--#endregion -->
         
         <!--#region UIPanel-->
-        <Label Content="Кто ходит?" Grid.Column="9" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource letter}"/>
+        <!--#region  Status Bar-->
         <Grid  Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="8">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
                 <Label Content="Скушано: " Margin="0, 5, 0, 0" Style="{StaticResource letter}" HorizontalAlignment="Left"/>
                 <Label x:Name="whiteCount" Content="0" Margin="0, 10, 0, 0" Style="{StaticResource letter}"/>
                 <Label Content="x" Margin="-10, 10, 0, 0" Style="{StaticResource letter}"/>
-                <Border Background="{StaticResource whiteShaska}" CornerRadius="35" Width="60"  Margin="0, 10"/>
+                <Border Background="{StaticResource whiteShaska}" CornerRadius="35" Width="50"  Margin="0, 10"/>
                 <Label x:Name="blackCount" Content="0" Margin="40, 10, 0, 0" Style="{StaticResource letter}"/>
                 <Label Content="x" Margin="-10, 10, 0, 0" Style="{StaticResource letter}"/>
-                <Border Background="{StaticResource blackShaska}" CornerRadius="35" Width="60"  Margin="0, 10"/>
+                <Border Background="{StaticResource blackShaska}" CornerRadius="35" Width="50"  Margin="0, 10"/>
             </StackPanel>
         </Grid>
+        <!--#endregion-->
+        
+        <Label Content="Кто ходит?" Grid.Column="9" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource letter}"/>
         <Grid Grid.Column="9" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="9">
             <StackPanel Orientation="Vertical">
                 <Border Margin="30, -2" Height="100" Background="#FF093B78" BorderBrush="DodgerBlue" BorderThickness="4" CornerRadius="20">
