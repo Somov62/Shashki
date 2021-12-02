@@ -24,7 +24,7 @@ namespace Shashki
         #region Fields
         private List<Shashka> _whiteShashks = new List<Shashka>(12)
         {
-            new Shashka(0, 1, Team.White){ IsDamka=true},
+            new Shashka(0, 1, Team.White),
             new Shashka(0, 3, Team.White),
             new Shashka(0, 5, Team.White),
             new Shashka(0, 7, Team.White),
@@ -39,7 +39,7 @@ namespace Shashki
         };
         private List<Shashka> _blackShashks = new List<Shashka>(12)
         {
-            new Shashka(6, 1, Team.Black){ IsDamka=true},
+            new Shashka(6, 1, Team.Black),
             new Shashka(6, 3, Team.Black),
             new Shashka(6, 5, Team.Black),
             new Shashka(6, 7, Team.Black),
@@ -81,6 +81,7 @@ namespace Shashki
                         Border br = new Border();
                         Button btn = new Button() { DataContext = br };
                         btn.Click += Button_Click;
+                        btn.Content = i.ToString() + "  " + j.ToString();
                         br.Child = btn;
                         playGround.Children.Add(br);
                         Grid.SetRow(br, i);
@@ -260,6 +261,18 @@ namespace Shashki
                         SelectedShahka.RowCoord = row;
                         SelectedShahka.ColumnCoord = column;
                         _eatEvent = false;
+                        return true;
+                    }
+                    if (CheckDamkaCanEat(SelectedShahka, (SelectedShahka.RowCoord - row), (SelectedShahka.ColumnCoord - column)))
+                    {
+
+                        List<Shashka> enemyList = new List<Shashka>();
+                        if (SelectedShahka.Color == Team.Black) enemyList = _whiteShashks;
+                        else enemyList = _blackShashks;
+                        RemoveShashka(_damkEatRow, _damkEatColumn, enemyList);
+                        SelectedShahka.RowCoord = row;
+                        SelectedShahka.ColumnCoord = column;
+                        _eatEvent = true;
                         return true;
                     }
                 }
@@ -546,6 +559,8 @@ namespace Shashki
         {
             if (x < 0 && y < 0)
             {
+                x++;
+                y++;
                 if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color))
                 {
                     return false;
@@ -561,20 +576,20 @@ namespace Shashki
                 if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1, colorEnemy))
                 {
                     {
-                        _damkEatRow = damka.RowCoord;
-                        _damkEatColumn = damka.ColumnCoord;
-                        if (CheckDamkaCanGo(damka, x, y))
+                        _damkEatRow = damka.RowCoord + 1;
+                        _damkEatColumn = damka.ColumnCoord + 1;
+                        if (CheckDamkaCanGo(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y))
                             return true;
                         else
                             return false;
                     }
                 }
-                x++;
-                y++;
                 return CheckDamkaCanEat(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y);
             }
             if (x > 0 && y < 0)
             {
+                x--;
+                y++;
                 if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color))
                 {
                     return false;
@@ -590,20 +605,20 @@ namespace Shashki
                 if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1, colorEnemy))
                 {
                     {
-                        _damkEatRow = damka.RowCoord;
-                        _damkEatColumn = damka.ColumnCoord;
-                        if (CheckDamkaCanGo(damka, x, y))
+                        _damkEatRow = damka.RowCoord - 1;
+                        _damkEatColumn = damka.ColumnCoord + 1;
+                        if (CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color), x, y))
                             return true;
                         else
                             return false;
                     }
                 }
-                x--;
-                y++;
-                return CheckDamkaCanEat(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y);
+                return CheckDamkaCanEat(new Shashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color), x, y);
             }
             if (x < 0 && y > 0)
             {
+                x++;
+                y--;
                 if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color))
                 {
                     return false;
@@ -619,20 +634,20 @@ namespace Shashki
                 if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1, colorEnemy))
                 {
                     {
-                        _damkEatRow = damka.RowCoord;
-                        _damkEatColumn = damka.ColumnCoord;
-                        if (CheckDamkaCanGo(damka, x, y))
+                        _damkEatRow = damka.RowCoord + 1;
+                        _damkEatColumn = damka.ColumnCoord - 1;
+                        if (CheckDamkaCanGo(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y))
                             return true;
                         else
                             return false;
                     }
                 }
-                x++;
-                y--;
                 return CheckDamkaCanEat(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y);
             }
             if (x > 0 && y > 0)
             {
+                x--;
+                y--;
                 if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color))
                 {
                     return false;
@@ -648,16 +663,14 @@ namespace Shashki
                 if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, colorEnemy))
                 {
                     {
-                        _damkEatRow = damka.RowCoord;
-                        _damkEatColumn = damka.ColumnCoord;
-                        if (CheckDamkaCanGo(damka, x, y))
+                        _damkEatRow = damka.RowCoord - 1;
+                        _damkEatColumn = damka.ColumnCoord - 1;
+                        if (CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y))
                             return true;
                         else
                             return false;
                     }
                 }
-                x--;
-                y--;
                 return CheckDamkaCanEat(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y);
             }
             return false;
