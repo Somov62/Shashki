@@ -108,7 +108,7 @@ namespace Shashki
         }
         public Border Figure { get => _figure; }
     }
-    public enum Team
+    internal enum Team
     {
         White,
         Black

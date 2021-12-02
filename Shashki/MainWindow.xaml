@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Shashki"
         mc:Ignorable="d"
+        x:Name="window"
         Title="SHAHSKI: 2022 REMASTER EDITION | DIRECTED BY ISP-31 | THANKS FOR 500 BILLION DOWLOANDS | Продам гараж: 8-910-505-47-90 недорого! | DEDICATED TO NOVITSKYI AND AFANASYEV" Width="1220" Height="800" ResizeMode="CanMinimize" Background="#FF093B78" FontFamily="./#Comfortaa">
     <Window.Resources>
         <RadialGradientBrush x:Key="whiteShaska">
@@ -54,12 +55,12 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
+
         <!--#region Border PlayGround-->
         <Border x:Name="stepBorder" Style="{StaticResource BorderPlayGroundTriggers}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="10" Grid.RowSpan="10" Margin="65" CornerRadius="10"/>
         <Border IsEnabled="{Binding ElementName=stepBorder, Path=IsEnabled}" BorderThickness="5" Style="{StaticResource BorderPlayGroundTriggers}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="10" Grid.RowSpan="10" Margin="76" CornerRadius="4"/>
         <!--#endregion-->
-        
+
         <Grid Margin="0, 2, 0, 2" x:Name="playGround" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="8" Grid.RowSpan="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -82,7 +83,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
         </Grid>
-        
+
         <!--#region Coords letters-->
         <Border Grid.Row="0" Grid.Column="1" >
             <Label Content="A" Style="{StaticResource letter}"/>
@@ -133,7 +134,7 @@
             <Label Content="8" Style="{StaticResource letter}" Margin="0, 0, 14, 0"/>
         </Border>
         <!--#endregion -->
-        
+
         <!--#region UIPanel-->
         <!--#region  Status Bar-->
         <Grid  Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="8">
@@ -148,11 +149,18 @@
             </StackPanel>
         </Grid>
         <!--#endregion-->
-        
+
         <Label Content="Кто ходит?" Grid.Column="9" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource letter}"/>
         <Grid Grid.Column="9" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="9">
             <StackPanel Orientation="Vertical">
-                <Border Margin="30, -2" Height="100" Background="#FF093B78" BorderBrush="DodgerBlue" BorderThickness="4" CornerRadius="20">
+                <Border Margin="30, -2" Height="100" Background="#FF093B78"  BorderThickness="4" CornerRadius="20">
+                    <Border.BorderBrush>
+                        <LinearGradientBrush EndPoint="1,0" StartPoint="0,3">
+                            <GradientStop Color="#FF4facfe" Offset="1"/>
+                            <GradientStop Color="#FF00f2fe" Offset="0"/>
+                        </LinearGradientBrush>
+                    </Border.BorderBrush>
+                
                     <Grid>
                         <Border x:Name="whitePart" CornerRadius="18" Style="{StaticResource WhiteBorderTriggers}" IsEnabled="True" HorizontalAlignment="Left" Width="409">
                             <TextBlock x:Name="whitePartLabel" Text="Белые" VerticalAlignment="Top" FontWeight="SemiBold"/>
@@ -160,9 +168,19 @@
                         <Border x:Name="blackPart" CornerRadius="18" Style="{StaticResource BlackBorderTriggers}" IsEnabled="False" HorizontalAlignment="Right" Width="409">
                             <TextBlock x:Name="blackpartLabel" Text="Чёрные" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="SemiBold"/>
                         </Border>
-                        <Line X1="114" Y1="105" X2="295" Y2="-2" Stroke="DodgerBlue" StrokeThickness="4"/>
+                        <Line X1="114" Y1="105" X2="295" Y2="-2" StrokeThickness="4">
+                            <Line.Stroke>
+                                <LinearGradientBrush EndPoint="1,0" StartPoint="0,3">
+                                    <GradientStop Color="#FF4facfe" Offset="1"/>
+                                    <GradientStop Color="#FF00f2fe" Offset="0"/>
+                                </LinearGradientBrush>
+                            </Line.Stroke>
+                        </Line>
                     </Grid>
                 </Border>
+                <Button x:Name="finishStep" Margin="0, 40" Content="Закончить ход" Height="60" Click="FinishStep_Click"  IsEnabled="False" Style="{StaticResource UIPanelButton}"  >
+
+                </Button>
             </StackPanel>
         </Grid>
         <!--#endregion-->

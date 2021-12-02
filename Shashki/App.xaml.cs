@@ -13,5 +13,9 @@ namespace Shashki
     /// </summary>
     public partial class App : Application
     {
+        private void contentPresenter_TextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+
+        }
     }
 }
