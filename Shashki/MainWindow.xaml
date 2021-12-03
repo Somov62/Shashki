@@ -139,7 +139,7 @@
         <!--#region UIPanel-->
         <!--#region  Status Bar-->
         <Grid  Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="8">
-            <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+            <StackPanel Orientation="Horizontal" Margin="50, 10, 0, 0">
                 <Label Content="Скушано: " Margin="0, 5, 0, 0" Style="{StaticResource letter}" HorizontalAlignment="Left"/>
                 <Label x:Name="whiteCount" Content="0" Margin="0, 10, 0, 0" Style="{StaticResource letter}"/>
                 <Label Content="x" Margin="-10, 10, 0, 0" Style="{StaticResource letter}"/>
@@ -187,6 +187,8 @@
             </StackPanel>
         </Grid>
         <!--#endregion-->
+        <Border x:Name="backWin" HorizontalAlignment="Left" Width="1220" Margin="-1, 2, 0, 2" IsHitTestVisible="False" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="8" Grid.RowSpan="8" Opacity="0" Background="Black" CornerRadius="1"></Border>
+            <Label Content="" x:Name="winLabel"  IsHitTestVisible="False" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="8" Grid.RowSpan="8" Opacity="0" Style="{StaticResource letter}"/>
         <Border x:Name="back" HorizontalAlignment="Left" Width="1220" VerticalAlignment="Top" Height="0" IsHitTestVisible="False" Grid.ColumnSpan="11" Grid.RowSpan="10" Opacity="0" Background="Black"/>
         <Label Content=
 "ISP-31 Studios &#10;
@@ -195,10 +197,13 @@
 Лучшей группы - ИСП-31&#10;
 &#10;
 А также с помощью:&#10;
-чая и кофе&#10;
+чая, кофе и кагоцела&#10;
 &#10;
 Представляет:&#10;
 SHAHSKI: 2022 REMASTER EDITION&#10;
+&#10;
+1200 строк c# кода&#10;
+450 строк вёрстки xaml&#10;
 &#10;
 Разработчики:&#10;
 Косоуров Илья&#10;
@@ -241,7 +246,6 @@ SHAHSKI: 2022 REMASTER EDITION&#10;
 блин, сложно&#10;
 &#10;
 Рязань 2021 г.&#10;
-               
 "
               x:Name="titry" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="1220"  Margin="0,  800, 0 , 0" Grid.ColumnSpan="11" Grid.RowSpan="10"
                Foreground="White" FontSize="30" FontWeight="Bold" />

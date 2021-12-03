@@ -274,33 +274,10 @@ namespace Shashki
             }
             Output();
             SelectedShahka.IsSelected = false;
-            if (!CheckMove())
-            {
-                switch (IsWhiteGo)
-                {
-                    case true:
-                        MessageBox.Show("BLACK WIN");
-                        break;
-                    case false:
-                        MessageBox.Show("White WIN");
-                        break;
-                }
-                finishStep.IsEnabled = false;
-                return;
-            }
             IsWhiteGo = !IsWhiteGo;
             if (!CheckMove())
             {
-                switch (IsWhiteGo)
-                {
-                    case true:
-                        MessageBox.Show("BLACK WIN");
-                        break;
-                    case false:
-                        MessageBox.Show("White WIN");
-                        break;
-                }
-
+                Win();
                 return;
             }
             stepBorder.IsEnabled = IsWhiteGo;
@@ -308,7 +285,33 @@ namespace Shashki
             blackPart.IsEnabled = !IsWhiteGo;
             EatEvent = false;
         }
-
+        private void Win()
+        {
+            DoubleAnimation opacityAnimation = new()
+            {
+                To = 0.7,
+                Duration = new TimeSpan(0, 0, 2),
+            };
+            backWin.BeginAnimation(Border.OpacityProperty, opacityAnimation);
+            DoubleAnimation opacityAnimation2 = new()
+            {
+                To = 1,
+                Duration = new TimeSpan(0, 0, 3),
+                BeginTime = new TimeSpan(0, 0, 1)
+            };
+            winLabel.BeginAnimation(Border.OpacityProperty, opacityAnimation2);
+            backWin.IsHitTestVisible = true;
+            switch (IsWhiteGo)
+            {
+                case false:
+                    winLabel.Content = "победа за белыми";
+                    break;
+                case true:
+                    winLabel.Content = "победа за чёрными";
+                    break;
+            }
+            finishStep.IsEnabled = false;
+        }
         private bool TakeFook(int row, int column)
         {
             if (FindShashka(row, column, _fookShashks) && _fook)
@@ -385,8 +388,8 @@ namespace Shashki
 
             ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
             {
-                To = new Thickness(0, -1800, 0, 0),
-                Duration = new TimeSpan(0, 0, 36),
+                To = new Thickness(0, -1850, 0, 0),
+                Duration = new TimeSpan(0, 0, 37),
                 BeginTime = new TimeSpan(0, 0, 3)
             };
             titry.BeginAnimation(Label.MarginProperty, thicknessAnimation);
@@ -397,7 +400,7 @@ namespace Shashki
         }
         private void CloseTitle()
         {
-            Thread.Sleep(39500);
+            Thread.Sleep(40500);
             this.Dispatcher.Invoke(() =>
             {
                 back.BeginAnimation(Border.OpacityProperty, null);
