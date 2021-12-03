@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace Shashki
 {
@@ -146,43 +140,11 @@ namespace Shashki
                             return;
                         }
                     }
-                    if (SelectedShahka.Color == Team.Black && SelectedShahka.RowCoord == 0)
-                    {
-                        SelectedShahka.IsDamka = true;
-                    }
-                    if (SelectedShahka.Color == Team.White && SelectedShahka.RowCoord == 7)
-                    {
-                        SelectedShahka.IsDamka = true;
-                    }
-                    Output();
-                    SelectedShahka.IsSelected = false;
-                    IsWhiteGo = !IsWhiteGo;
-                    stepBorder.IsEnabled = IsWhiteGo;
-                    whitePart.IsEnabled = IsWhiteGo;
-                    blackPart.IsEnabled = !IsWhiteGo;
-                    EatEvent = false;
+                    FinishStep_Click(this, null);
                 }
             }
         }
 
-        public void FinishStep_Click(object sender, RoutedEventArgs e)
-        {
-            if (SelectedShahka.Color == Team.Black && SelectedShahka.RowCoord == 0)
-            {
-                SelectedShahka.IsDamka = true;
-            }
-            if (SelectedShahka.Color == Team.White && SelectedShahka.RowCoord == 7)
-            {
-                SelectedShahka.IsDamka = true;
-            }
-            Output();
-            SelectedShahka.IsSelected = false;
-            IsWhiteGo = !IsWhiteGo;
-            stepBorder.IsEnabled = IsWhiteGo;
-            whitePart.IsEnabled = IsWhiteGo;
-            blackPart.IsEnabled = !IsWhiteGo;
-            EatEvent = false;
-        }
         private bool Step(object sender)
         {
             (int row, int column) = GetCoord(sender);
@@ -300,418 +262,53 @@ namespace Shashki
             }
             return false;
         }
-
-        private bool CheckEat(Shashka shashka)
+        public void FinishStep_Click(object sender, RoutedEventArgs e)
         {
-            List<Shashka> enemyList = new List<Shashka>();
-            if (shashka.Color == Team.Black) enemyList = _whiteShashks;
-            if (shashka.Color == Team.White) enemyList = _blackShashks;
-            if (FindShashka(shashka.RowCoord - 1, shashka.ColumnCoord - 1, enemyList))
+            if (SelectedShahka.Color == Team.Black && SelectedShahka.RowCoord == 0)
             {
-                if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord - 2, _blackShashks))
-                {
-                    if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord - 2, _whiteShashks)) return true;
-                }
+                SelectedShahka.IsDamka = true;
             }
-            if (FindShashka(shashka.RowCoord - 1, shashka.ColumnCoord + 1, enemyList))
+            if (SelectedShahka.Color == Team.White && SelectedShahka.RowCoord == 7)
             {
-                if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord + 2, _blackShashks))
-                {
-                    if (!FindShashka(shashka.RowCoord - 2, shashka.ColumnCoord + 2, _whiteShashks)) return true;
-                }
+                SelectedShahka.IsDamka = true;
             }
-            if (FindShashka(shashka.RowCoord + 1, shashka.ColumnCoord - 1, enemyList))
+            Output();
+            SelectedShahka.IsSelected = false;
+            if (!CheckMove())
             {
-                if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord - 2, _blackShashks))
+                switch (IsWhiteGo)
                 {
-                    if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord - 2, _whiteShashks)) return true;
+                    case true:
+                        MessageBox.Show("BLACK WIN");
+                        break;
+                    case false:
+                        MessageBox.Show("White WIN");
+                        break;
                 }
+                finishStep.IsEnabled = false;
+                return;
             }
-            if (FindShashka(shashka.RowCoord + 1, shashka.ColumnCoord + 1, enemyList))
+            IsWhiteGo = !IsWhiteGo;
+            if (!CheckMove())
             {
-                if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord + 2, _blackShashks))
+                switch (IsWhiteGo)
                 {
-                    if (!FindShashka(shashka.RowCoord + 2, shashka.ColumnCoord + 2, _whiteShashks)) return true;
+                    case true:
+                        MessageBox.Show("BLACK WIN");
+                        break;
+                    case false:
+                        MessageBox.Show("White WIN");
+                        break;
                 }
-            }
 
-            if (shashka.IsDamka == true)
-            {
-                if (CheckEatDamkaOneDiagonal(shashka, -1, -1)) return true;
-                if (CheckEatDamkaOneDiagonal(shashka, -1, +1)) return true;
-                if (CheckEatDamkaOneDiagonal(shashka, +1, -1)) return true;
-                if (CheckEatDamkaOneDiagonal(shashka, +1, +1)) return true;
+                return;
             }
-
-            return false;
+            stepBorder.IsEnabled = IsWhiteGo;
+            whitePart.IsEnabled = IsWhiteGo;
+            blackPart.IsEnabled = !IsWhiteGo;
+            EatEvent = false;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="damka">проверяемая дамка</param>
-        /// <param name="x"> если меньше нуля то право иначе лево</param>
-        /// <param name="y"> если меньше нуля то верх иначе </param>
-        /// <returns></returns>
-        private bool CheckEatDamkaOneDiagonal(Shashka damka, int x, int y, bool wasEnemy = false)
-        {
-            if (x < 0 && y < 0)
-            {
-                //проверка на наличие дружественной шашки на -1 -1 по отношениию к прошлой проверки
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color))
-                {
-                    return false;
-                }
 
-                //вычисляем цвет врага
-                Team colorEnemy;
-                if (damka.Color == Team.White)
-                    colorEnemy = Team.Black;
-                else
-                    colorEnemy = Team.White;
-
-                //проверка на наличие вражеской шашки на -1 -1 по отношениию к прошлой проверки
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, colorEnemy))
-                {
-                    if (wasEnemy)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y, true);
-                    }
-                }
-
-                //при отсутствии шашек на -1 -1 по отношениию к прошлой проверки
-                if (wasEnemy)
-                {
-                    return true;
-                }
-                else
-                {
-                    return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y, false);
-                }
-            }
-            if (x >= 0 && y < 0)
-            {
-                //проверка на наличие дружественной шашки на +1 -1 по отношениию к прошлой проверки
-                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color))
-                {
-                    return false;
-                }
-
-                //вычисляем цвет врага
-                Team colorEnemy;
-                if (damka.Color == Team.White)
-                    colorEnemy = Team.Black;
-                else
-                    colorEnemy = Team.White;
-
-                //проверка на наличие вражеской шашки на +1 -1 по отношениию к прошлой проверки
-                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1, colorEnemy))
-                {
-                    if (wasEnemy)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y, true);
-                    }
-                }
-
-                //при отсутствии шашек на +1 -1 по отношениию к прошлой проверки
-                if (wasEnemy)
-                {
-                    return true;
-                }
-                else
-                {
-                    return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y, false);
-                }
-            }
-            if (x < 0 && y >= 0)
-            {
-                //проверка на наличие дружественной шашки на -1 +1 по отношениию к прошлой проверки
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color))
-                {
-                    return false;
-                }
-
-                //вычисляем цвет врага
-                Team colorEnemy;
-                if (damka.Color == Team.White)
-                    colorEnemy = Team.Black;
-                else
-                    colorEnemy = Team.White;
-
-                //проверка на наличие вражеской шашки на -1 +1 по отношениию к прошлой проверки
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1, colorEnemy))
-                {
-                    if (wasEnemy)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color), x, y, true);
-                    }
-                }
-
-                //при отсутствии шашек на -1 +1 по отношениию к прошлой проверки
-                if (wasEnemy)
-                {
-                    return true;
-                }
-                else
-                {
-                    return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color), x, y, false);
-                }
-            }
-            if (x >= 0 && y >= 0)
-            {
-                //проверка на наличие дружественной шашки на +1 +1 по отношениию к прошлой проверки
-                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color))
-                {
-                    return false;
-                }
-
-                //вычисляем цвет врага
-                Team colorEnemy;
-                if (damka.Color == Team.White)
-                    colorEnemy = Team.Black;
-                else
-                    colorEnemy = Team.White;
-
-                //проверка на наличие вражеской шашки на +1 +1 по отношениию к прошлой проверки
-                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1, colorEnemy))
-                {
-                    if (wasEnemy)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y, true);
-                    }
-                }
-
-                //при отсутствии шашек на +1 +1 по отношениию к прошлой проверки
-                if (wasEnemy)
-                {
-                    return true;
-                }
-                else
-                {
-                    return CheckEatDamkaOneDiagonal(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y, false);
-                }
-            }
-            return false;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="damka"></param>
-        /// <param name="x">равны по модулю(обязательно)-----меньше нуля то низ   если больше то вверх</param>
-        /// <param name="y">равны по модулю(обязательно)-----меньше нуля то лево  если больше то право</param>
-        /// <param name="wasEnemy"></param>
-        /// <returns></returns>
-        private bool CheckDamkaCanGo(Shashka damka, int x, int y)
-        {
-            if (x < 0 && y < 0)
-            {
-                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1))
-                {
-                    return false;
-                }
-                else
-                {
-                    x++;
-                    y++;
-                    return CheckDamkaCanGo(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y);
-                }
-            }
-            if (x > 0 && y < 0)
-            {
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1))
-                {
-                    return false;
-                }
-                else
-                {
-                    x--;
-                    y++;
-                    return CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color), x, y);
-                }
-            }
-            if (x < 0 && y > 0)
-            {
-                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1))
-                {
-                    return false;
-                }
-                else
-                {
-                    x++;
-                    y--;
-                    return CheckDamkaCanGo(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y);
-                }
-            }
-            if (x > 0 && y > 0)
-            {
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1))
-                {
-                    return false;
-                }
-                else
-                {
-                    x--;
-                    y--;
-                    return CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y);
-                }
-            }
-            if (x == 0)
-            {
-                return true;
-            }
-            return false;
-        }
-        private bool CheckDamkaCanEat(Shashka damka, int x, int y)
-        {
-            if (x < 0 && y < 0)
-            {
-                x++;
-                y++;
-                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color))
-                {
-                    return false;
-                }
-
-                //вычисляем цвет врага
-                Team colorEnemy;
-                if (damka.Color == Team.White)
-                    colorEnemy = Team.Black;
-                else
-                    colorEnemy = Team.White;
-
-                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord + 1, colorEnemy))
-                {
-                    {
-                        _damkEatRow = damka.RowCoord + 1;
-                        _damkEatColumn = damka.ColumnCoord + 1;
-                        if (CheckDamkaCanGo(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y))
-                            return true;
-                        else
-                            return false;
-                    }
-                }
-                return CheckDamkaCanEat(new Shashka(damka.RowCoord + 1, damka.ColumnCoord + 1, damka.Color), x, y);
-            }
-            if (x > 0 && y < 0)
-            {
-                x--;
-                y++;
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color))
-                {
-                    return false;
-                }
-
-                //вычисляем цвет врага
-                Team colorEnemy;
-                if (damka.Color == Team.White)
-                    colorEnemy = Team.Black;
-                else
-                    colorEnemy = Team.White;
-
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord + 1, colorEnemy))
-                {
-                    {
-                        _damkEatRow = damka.RowCoord - 1;
-                        _damkEatColumn = damka.ColumnCoord + 1;
-                        if (CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color), x, y))
-                            return true;
-                        else
-                            return false;
-                    }
-                }
-                return CheckDamkaCanEat(new Shashka(damka.RowCoord - 1, damka.ColumnCoord + 1, damka.Color), x, y);
-            }
-            if (x < 0 && y > 0)
-            {
-                x++;
-                y--;
-                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color))
-                {
-                    return false;
-                }
-
-                //вычисляем цвет врага
-                Team colorEnemy;
-                if (damka.Color == Team.White)
-                    colorEnemy = Team.Black;
-                else
-                    colorEnemy = Team.White;
-
-                if (FindShashka(damka.RowCoord + 1, damka.ColumnCoord - 1, colorEnemy))
-                {
-                    {
-                        _damkEatRow = damka.RowCoord + 1;
-                        _damkEatColumn = damka.ColumnCoord - 1;
-                        if (CheckDamkaCanGo(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y))
-                            return true;
-                        else
-                            return false;
-                    }
-                }
-                return CheckDamkaCanEat(new Shashka(damka.RowCoord + 1, damka.ColumnCoord - 1, damka.Color), x, y);
-            }
-            if (x > 0 && y > 0)
-            {
-                x--;
-                y--;
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color))
-                {
-                    return false;
-                }
-
-                //вычисляем цвет врага
-                Team colorEnemy;
-                if (damka.Color == Team.White)
-                    colorEnemy = Team.Black;
-                else
-                    colorEnemy = Team.White;
-
-                if (FindShashka(damka.RowCoord - 1, damka.ColumnCoord - 1, colorEnemy))
-                {
-                    {
-                        _damkEatRow = damka.RowCoord - 1;
-                        _damkEatColumn = damka.ColumnCoord - 1;
-                        if (CheckDamkaCanGo(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y))
-                            return true;
-                        else
-                            return false;
-                    }
-                }
-                return CheckDamkaCanEat(new Shashka(damka.RowCoord - 1, damka.ColumnCoord - 1, damka.Color), x, y);
-            }
-            return false;
-        }
-        private bool CheckFook()
-        {
-            _fookShashks.Clear();
-            List<Shashka> friendList = new List<Shashka>();
-            if (SelectedShahka.Color == Team.White) friendList = _whiteShashks;
-            else friendList = _blackShashks;
-            foreach (var item in friendList)
-            {
-                if (CheckEat(item))
-                {
-                    _fookShashks.Add(item);
-                }
-            }
-            if (_fookShashks.Count > 0) return true;
-            return false;
-        }
         private bool TakeFook(int row, int column)
         {
             if (FindShashka(row, column, _fookShashks) && _fook)
@@ -724,6 +321,106 @@ namespace Shashki
                 return true;
             }
             return false;
+        }
+        public void Restart_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow window = new();
+            this.Close();
+            window.Show();
+        }
+
+        private void Info_Click(object sender, RoutedEventArgs e)
+        {
+            if (back.Opacity == 1)
+            {
+                back.BeginAnimation(Border.OpacityProperty, null);
+                titry.BeginAnimation(Label.MarginProperty, null);
+                back.Height = 0;
+                back.Opacity = 0;
+                titry.Margin = new Thickness(0, 800, 0, 0);
+                Keyboard.ClearFocus();
+                return;
+            }
+            SolidColorBrush animatedBrush = new SolidColorBrush();
+            try
+            {
+                this.RegisterName("AnimatedBrush", animatedBrush);
+            }
+            catch { }
+
+            DoubleAnimation heightAnimation = new()
+            {
+                To = 800,
+                Duration = new TimeSpan(0, 0, 0, 0, 400),
+            };
+            back.BeginAnimation(Border.HeightProperty, heightAnimation);
+
+            DoubleAnimation opacityAnimation = new()
+            {
+                To = 1,
+                Duration = new TimeSpan(0, 0, 2),
+            };
+            BounceEase func = new();
+            func.EasingMode = EasingMode.EaseOut;
+            opacityAnimation.EasingFunction = func;
+            back.BeginAnimation(Border.OpacityProperty, opacityAnimation);
+
+            #region ColorAnim на будущее 
+            //ColorAnimation colorAnimation = new()
+            //{
+            //    To = Color.FromArgb(255, 0, 0, 0),
+            //    Duration = TimeSpan.FromSeconds(2.5)
+            //};
+            //Storyboard.SetTargetName(colorAnimation, "AnimatedBrush");
+            //Storyboard.SetTargetProperty(colorAnimation, new PropertyPath(SolidColorBrush.ColorProperty));
+            //back.Background = animatedBrush;
+            //ElasticEase func = new();
+            //func.EasingMode = EasingMode.EaseOut;
+            //colorAnimation.EasingFunction = func;
+            //// Create a storyboard to apply the animation.
+            //Storyboard myStoryboard = new Storyboard();
+            //myStoryboard.Children.Add(colorAnimation);
+            //myStoryboard.Begin(this);
+            #endregion
+
+            ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+            {
+                To = new Thickness(0, -1800, 0, 0),
+                Duration = new TimeSpan(0, 0, 36),
+                BeginTime = new TimeSpan(0, 0, 3)
+            };
+            titry.BeginAnimation(Label.MarginProperty, thicknessAnimation);
+
+            btnTitry.Focus();
+            Task closeTitle = new Task(new Action(CloseTitle));
+            closeTitle.Start();
+        }
+        private void CloseTitle()
+        {
+            Thread.Sleep(39500);
+            this.Dispatcher.Invoke(() =>
+            {
+                back.BeginAnimation(Border.OpacityProperty, null);
+                titry.BeginAnimation(Label.MarginProperty, null);
+                back.Height = 0;
+                back.Opacity = 0;
+                titry.Margin = new Thickness(0, 800, 0, 0);
+                Keyboard.ClearFocus();
+            });
+        }
+        private void Support_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult messageBoxResult = MessageBox.Show("Хочешь ли ты поддержать разработчиков добрым словом?", "", MessageBoxButton.YesNo, MessageBoxImage.Information);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                MessageBox.Show("спасибо :З\n\nВот тебе интересные и полезные строчки почитать:\n\nПри бесполом размножении медуза оседает на дно, становясь полипом.\nЗатем становится некоем подобием стопочки маленьких медуз, которые, в свою очередь, отцепляются и разносятся течением, становясь со временем взрослыми особями", "Спасибо)", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else MessageBox.Show("ладно -_-\n\nВот тебе интересные и полезные строчки почитать:\n\nПри бесполом размножении медуза оседает на дно, становясь полипом.\nЗатем становится некоем подобием стопочки маленьких медуз, которые, в свою очередь, отцепляются и разносятся течением, становясь со временем взрослыми особями", "", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

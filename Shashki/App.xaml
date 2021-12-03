@@ -28,6 +28,7 @@
                     </LinearGradientBrush>
                 </Setter.Value>
             </Setter>
+            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="FontSize" Value="15" />
             <Setter Property="Height" Value="30" />
@@ -45,6 +46,9 @@
                             <Trigger Property="IsEnabled" Value="True">
                                 <Setter Property="Background" TargetName="mask"  Value="Transparent" />
                                 <Setter Property="TextBlock.Foreground" TargetName="border"  Value="White" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="FontSize" Value="16"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

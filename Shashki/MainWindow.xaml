@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Shashki"
         mc:Ignorable="d"
         x:Name="window"
-        Title="SHAHSKI: 2022 REMASTER EDITION | DIRECTED BY ISP-31 | THANKS FOR 500 BILLION DOWLOANDS | Продам гараж: 8-910-505-47-90 недорого! | DEDICATED TO NOVITSKYI AND AFANASYEV" Width="1220" Height="800" ResizeMode="CanMinimize" Background="#FF093B78" FontFamily="./#Comfortaa">
+        Title="SHAHSKI: 2022 REMASTER EDITION | DIRECTED BY ISP-31 | THANKS FOR 500 BILLION DOWLOANDS | Продам гараж: 8-910-505-47-90 недорого! | DEDICATED TO NOVITSKYI AND AFANASYEV" 
+        Width="1220" Height="800" ResizeMode="CanMinimize" Background="#FF093B78" FontFamily="./#Comfortaa" WindowStartupLocation="Manual" Left="0" Top="0">
     <Window.Resources>
         <RadialGradientBrush x:Key="whiteShaska">
             <GradientStop Color="#FF939393" Offset="0.317"/>
@@ -29,7 +30,7 @@
             <GradientStop Color="#FFA0A0A0" Offset="0.915"/>
         </RadialGradientBrush>
     </Window.Resources>
-    <Grid>
+    <Grid x:Name="windowGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -178,11 +179,71 @@
                         </Line>
                     </Grid>
                 </Border>
-                <Button x:Name="finishStep" Margin="0, 40" Content="Закончить ход" Height="60" Click="FinishStep_Click"  IsEnabled="False" Style="{StaticResource UIPanelButton}"  >
-
-                </Button>
+                <Button x:Name="finishStep" Margin="0, 40,0,0" Content="Закончить ход" Height="60" Click="FinishStep_Click"  IsEnabled="False" Style="{StaticResource UIPanelButton}"/>
+                <Button x:Name="restart" Margin="0, 40,0,0" Content="Начать заново" Height="60" Click="Restart_Click"  Style="{StaticResource UIPanelButton}"/>
+                <Button x:Name="btnTitry" Margin="0, 40,0,0" Content="Про шашки" Height="60" Click="Info_Click"  Style="{StaticResource UIPanelButton}"/>
+                <Button Margin="0, 40,0,0" Content="Поддержать создателей" Height="60" Click="Support_Click"  Style="{StaticResource UIPanelButton}"/>
+                <Button Margin="0, 40,0,0" Content="Выход" Height="60" Click="Exit_Click"  Style="{StaticResource UIPanelButton}"/>
             </StackPanel>
         </Grid>
         <!--#endregion-->
+        <Border x:Name="back" HorizontalAlignment="Left" Width="1220" VerticalAlignment="Top" Height="0" IsHitTestVisible="False" Grid.ColumnSpan="11" Grid.RowSpan="10" Opacity="0" Background="Black"/>
+        <Label Content=
+"ISP-31 Studios &#10;
+&#10;
+При поддержке:&#10;
+Лучшей группы - ИСП-31&#10;
+&#10;
+А также с помощью:&#10;
+чая и кофе&#10;
+&#10;
+Представляет:&#10;
+SHAHSKI: 2022 REMASTER EDITION&#10;
+&#10;
+Разработчики:&#10;
+Косоуров Илья&#10;
+Сомов Михаил&#10; 
+&#10;
+Тестировщики:&#10;
+Сомов Михаил&#10;
+Косоуров Илья&#10;
+&#10;
+Независимые Тестировщики:&#10;
+Савельев Дима&#10;
+Назаров Дима&#10;
+&#10;
+Специалист по дамкам:&#10;
+Косоуров Илья&#10;
+&#10;
+Специалист по зафукам:&#10;
+Сомов Михаил&#10;
+&#10;
+Ответственный за визуал:&#10;
+Сомов Михаил&#10;
+&#10;
+Ответственная за образование:&#10;
+Полина Перевезенцева&#10;
+&#10;
+Свободное время на разработку&#10;
+Лекции Юдаева&#10;
+&#10;
+Божья помощь предоставлена:&#10;
+Бог :/&#10;
+&#10;
+Посвящается:&#10;
+Новицкому К. В.&#10;
+Афанасьеву Д. А.&#10;
+&#10;
+С Новым Годом!&#10;
+&#10;
+Все права защищены&#10;
+&#10;
+блин, сложно&#10;
+&#10;
+Рязань 2021 г.&#10;
+               
+"
+              x:Name="titry" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="1220"  Margin="0,  800, 0 , 0" Grid.ColumnSpan="11" Grid.RowSpan="10"
+               Foreground="White" FontSize="30" FontWeight="Bold" />
     </Grid>
 </Window>
