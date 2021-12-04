@@ -24,6 +24,7 @@ namespace Shashki
             {
                 foreach (var item in _whiteShashks)
                 {
+                    //ну просто проверяем все возможные варианты куда можна наступить
                     if (item.IsDamka)
                     {
                         if (!FindShashka(item.RowCoord - 1, item.ColumnCoord - 1, _whiteShashks)) return true;
@@ -54,6 +55,7 @@ namespace Shashki
             {
                 foreach (var item in _blackShashks)
                 {
+                    //ну просто проверяем все возможные варианты куда можна наступить
                     if (item.IsDamka)
                     {
                         if (!FindShashka(item.RowCoord - 1, item.ColumnCoord - 1, _blackShashks)) return true;

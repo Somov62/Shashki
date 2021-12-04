@@ -16,15 +16,15 @@ namespace Shashki
     public partial class MainWindow : Window
     {
         #region Fields
-        private bool _eatEvent = false;
-        private bool IsWhiteGo = true;
-        private bool _fook = false;
+        private bool _eatEvent = false; //показатель съела ли шашка в прошлом ходу
+        private bool IsWhiteGo = true; //показатель кто ходит
+        private bool _fook = false; //показатель можно ли взять зафук 
 
-        private int _damkEatRow;
+        private int _damkEatRow; 
         private int _damkEatColumn;
 
-        private Shashka SelectedShahka;
-
+        private Shashka SelectedShahka; //выбранная шашка неважно какого цвета
+        
         private List<Shashka> _whiteShashks = new List<Shashka>(12)
         {
             new Shashka(0, 1, Team.White),
@@ -55,8 +55,8 @@ namespace Shashki
             new Shashka(5, 4, Team.Black),
             new Shashka(5, 6, Team.Black),
         };
-        private List<Shashka> _fookShashks = new List<Shashka>();
-        public bool EatEvent { get => _eatEvent; set { _eatEvent = value; finishStep.IsEnabled = value; } }
+        private List<Shashka> _fookShashks = new List<Shashka>(); //список шашек, которые можно взять зафук
+        public bool EatEvent { get => _eatEvent; set { _eatEvent = value; finishStep.IsEnabled = value; } }//включаем кнопку по состоянию _eatEvent
 
         #endregion
 
@@ -67,30 +67,29 @@ namespace Shashki
         }
         private void Output()
         {
-            playGround.Children.Clear();
+            playGround.Children.Clear(); //очищаем поле с шашками
+            // рисуем заново поле
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if ((i + j) % 2 == 1)
+                    Border br = new Border();
+                    if ((i + j) % 2 == 1) //в нечетные клетки добавляем кнопки для шашек
                     {
-                        Border br = new Border();
                         Button btn = new Button() { DataContext = br };
                         btn.Click += Button_Click;
-                        br.Child = btn;
-                        playGround.Children.Add(br);
-                        Grid.SetRow(br, i);
-                        Grid.SetColumn(br, j);
+                        br.Child = btn;                        
                     }
                     else
                     {
-                        Border br = new Border() { Background = Brushes.White };
-                        playGround.Children.Add(br);
-                        Grid.SetRow(br, i);
-                        Grid.SetColumn(br, j);
+                        br.Background = Brushes.White;//перекрываем синий цвет стиля, установленный в ресурсах
                     }
+                    playGround.Children.Add(br);
+                    Grid.SetRow(br, i);
+                    Grid.SetColumn(br, j);
                 }
             }
+            //Добавляем шашки на поле
             foreach (var item in _whiteShashks)
             {
                 playGround.Children.Add(item.Figure);
@@ -103,22 +102,25 @@ namespace Shashki
                 Grid.SetRow(item.Figure, item.RowCoord);
                 Grid.SetColumn(item.Figure, item.ColumnCoord);
             }
+            //выводим количество скушанных шашек
             whiteCount.Content = (_whiteShashks.Capacity - _whiteShashks.Count).ToString();
             blackCount.Content = (_blackShashks.Capacity - _blackShashks.Count).ToString();
         }
 
         public void Button_Click(object sender, RoutedEventArgs e)
         {
-            (int row, int column) = GetCoord(sender);
+            (int row, int column) = GetCoord(sender);//получаем координаты нажатой кнопки
+            //Выбор шашки
             if (!EatEvent && (FindShashka(row, column, _blackShashks) || FindShashka(row, column, _whiteShashks)))
             {
                 if (IsWhiteGo)
                 {
-                    if (TakeFook(row, column)) return;
-                    FindShashka(row, column, _whiteShashks, true);
+                    if (TakeFook(row, column)) return;//если на нажатой кнопке стоит шашка из листа _fookShashks, её берут зафук
+                    FindShashka(row, column, _whiteShashks, true); //проверяем наличие белой шашки на кнопке и выбираем её четвертым пареметром true
+                    //выбранная шашка записывается в SelectedShashka
                     return;
                 }
-                else
+                else //тоже самое с черными
                 {
                     if (TakeFook(row, column)) return;
                     FindShashka(row, column, _blackShashks, true);
@@ -128,8 +130,8 @@ namespace Shashki
             if (SelectedShahka == null) return;
             if (SelectedShahka.IsSelected == true)
             {
-                _fook = CheckFook();
-                if (Step(sender))
+                _fook = CheckFook(); //Проверяем возможность взять зафук, формируем _fookShashks на ход
+                if (Step(row, column))//происходит ход
                 {
                     if (EatEvent)
                     {
@@ -145,23 +147,24 @@ namespace Shashki
             }
         }
 
-        private bool Step(object sender)
+        private bool Step(int row, int column)
         {
-            (int row, int column) = GetCoord(sender);
             if (!SelectedShahka.IsDamka)
             {
                 //если шашка не является дамкой...
-                if (!EatEvent)
+                if (!EatEvent)//если в предыдущем ходу эта шашка не кушала
                 {
+                    #region Обычный ход
                     if (SelectedShahka.Color == Team.Black)
                     {
                         if (SelectedShahka.RowCoord - row == 1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
                         {
-                            if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                            if (!FindShashka(row, column)) //если место куда должна походить шашка свободно
                             {
+                                //новые координаты для шашки
                                 SelectedShahka.RowCoord = row;
                                 SelectedShahka.ColumnCoord = column;
-                                EatEvent = false;
+                                EatEvent = false; //в этом ходу съедания не было
                                 return true;
                             }
                         }
@@ -170,31 +173,39 @@ namespace Shashki
                     {
                         if (SelectedShahka.RowCoord - row == -1 && Math.Abs(SelectedShahka.ColumnCoord - column) == 1)
                         {
-                            if (!FindShashka(row, column, _blackShashks) && !FindShashka(row, column, _whiteShashks))
+                            if (!FindShashka(row, column)) //если место куда должна походить шашка свободно
                             {
+                                //новые координаты для шашки
                                 SelectedShahka.RowCoord = row;
                                 SelectedShahka.ColumnCoord = column;
-                                EatEvent = false;
+                                EatEvent = false; //в этом ходу съедания не было
                                 return true;
                             }
                         }
                     }
+                    #endregion
                 }
+                //если нажали кнопку, на которую встанет шашка если съест (грубо говоря через одну клетку по диагонали)
                 if (Math.Abs(SelectedShahka.RowCoord - row) == 2 && Math.Abs(SelectedShahka.ColumnCoord - column) == 2)
                 {
+                    //Если местечко занято, возвращаем ложь
                     if (FindShashka(row, column, _blackShashks)) return false;
                     if (FindShashka(row, column, _whiteShashks)) return false;
-                    List<Shashka> enemyList = new List<Shashka>();
+                    //определяем лист врагов
+                    List<Shashka> enemyList = new();
                     if (SelectedShahka.Color == Team.Black) enemyList = _whiteShashks;
                     else enemyList = _blackShashks;
+
+                    #region Ход - скушать
                     if (SelectedShahka.RowCoord > row && SelectedShahka.ColumnCoord > column)
                     {
-                        if (FindShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList))
+                        if (FindShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList)) 
                         {
+                            //если между выбранной шашкой и нажатой кнопкой есть вражеская шашка
                             RemoveShashka(SelectedShahka.RowCoord - 1, SelectedShahka.ColumnCoord - 1, enemyList);
                             SelectedShahka.RowCoord = row;
                             SelectedShahka.ColumnCoord = column;
-                            EatEvent = true;
+                            EatEvent = true;//скушание произошло
                             return true;
                         }
                     }
@@ -231,6 +242,7 @@ namespace Shashki
                             return true;
                         }
                     }
+                    #endregion
                 }
             }
             else
@@ -264,6 +276,7 @@ namespace Shashki
         }
         public void FinishStep_Click(object sender, RoutedEventArgs e)
         {
+            //делаем дамками дошедших до другой стороны доски
             if (SelectedShahka.Color == Team.Black && SelectedShahka.RowCoord == 0)
             {
                 SelectedShahka.IsDamka = true;
@@ -272,14 +285,16 @@ namespace Shashki
             {
                 SelectedShahka.IsDamka = true;
             }
+            //обновлняем поле
             Output();
             SelectedShahka.IsSelected = false;
-            IsWhiteGo = !IsWhiteGo;
-            if (!CheckMove())
+            IsWhiteGo = !IsWhiteGo; //меняем ход
+            if (!CheckMove()) //если ходящие не могут ходить - они проигрывают
             {
                 Win();
                 return;
             }
+            //красим рамку в другой цвет
             stepBorder.IsEnabled = IsWhiteGo;
             whitePart.IsEnabled = IsWhiteGo;
             blackPart.IsEnabled = !IsWhiteGo;
@@ -287,6 +302,7 @@ namespace Shashki
         }
         private void Win()
         {
+            //затемняем доску и выводим кто победил
             DoubleAnimation opacityAnimation = new()
             {
                 To = 0.7,
@@ -316,8 +332,9 @@ namespace Shashki
         {
             if (FindShashka(row, column, _fookShashks) && _fook)
             {
-                var removeItem = GetShashka(row, column, _fookShashks);
-                RemoveShashka(removeItem.RowCoord, removeItem.ColumnCoord, removeItem.Color);
+                var removeItem = GetShashka(row, column, _fookShashks);//получаем шашку из фук-листа
+                RemoveShashka(removeItem.RowCoord, removeItem.ColumnCoord, removeItem.Color); //и удаляем её
+                //ставим полям значение по умолчанию
                 _fook = false;
                 _fookShashks.Clear();
                 Output();
@@ -334,6 +351,7 @@ namespace Shashki
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
+            //ТИТРЫЫ
             if (back.Opacity == 1)
             {
                 back.BeginAnimation(Border.OpacityProperty, null);

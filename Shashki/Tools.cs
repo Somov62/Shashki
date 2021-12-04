@@ -20,7 +20,7 @@ namespace Shashki
         private (int row, int column) GetCoord(object sender)
         {
             Button btn = (Button)sender;
-            Border br = (Border)btn.DataContext;
+            Border br = (Border)btn.DataContext; //получаем бордер из кнопки
             int row = Grid.GetRow(br);
             int column = Grid.GetColumn(br);
             return (row, column);
@@ -29,7 +29,7 @@ namespace Shashki
         #region FindShashka
         private bool FindShashka(int row, int column, List<Shashka> collection, bool isSelect = false)
         {
-            if (row < 0 || row > 7 || column < 0 || column > 7) return true;
+            if (row < 0 || row > 7 || column < 0 || column > 7) return true; //если ищем шашку вне игрового поля, скажем, что она там есть
             var shashk = collection.Where(shahck => shahck.RowCoord == row)
                                    .Where(shahck => shahck.ColumnCoord == column);
             List<Shashka> list = shashk.ToList();
@@ -39,7 +39,7 @@ namespace Shashki
                 {
                     if (SelectedShahka != null)
                     {
-                        SelectedShahka.IsSelected = false;
+                        SelectedShahka.IsSelected = false; //снимаем селект со старой шашки
                     }
                     SelectedShahka = list[0];
                     SelectedShahka.IsSelected = true;
