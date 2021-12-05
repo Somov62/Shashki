@@ -185,6 +185,7 @@
                 <Button Margin="0, 40,0,0" Content="Поддержать создателей" Height="60" Click="Support_Click"  Style="{StaticResource UIPanelButton}"/>
                 <Button Margin="0, 40,0,0" Content="Выход" Height="60" Click="Exit_Click"  Style="{StaticResource UIPanelButton}"/>
             </StackPanel>
+            <Label Content="V 1.0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="11" Grid.Row="10" Foreground="White" Margin="0, 0, 10, 5"/> 
         </Grid>
         <!--#endregion-->
         <Border x:Name="backWin" HorizontalAlignment="Left" Width="1220" Margin="-1, 2, 0, 2" IsHitTestVisible="False" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="8" Grid.RowSpan="8" Opacity="0" Background="Black" CornerRadius="1"></Border>
